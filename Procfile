@@ -1,0 +1,1 @@
+web: ./build/install/ru.alpworking.app/bin/ru.alpworking.app
