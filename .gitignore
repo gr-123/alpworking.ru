@@ -1,3 +1,5 @@
+# Предотвратите попадание артефактов сборки в систему контроля версий
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

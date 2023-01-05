@@ -4,8 +4,11 @@ val logback_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.7.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.0"
+    // https://kotlinlang.org/docs/gradle.html
+    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
+    kotlin("jvm") version "1.7.20"
+    // https://plugins.gradle.org/search?term=serialization
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.20"
 }
 
 group = "ru.alpworking"
@@ -34,6 +37,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
 
+// создать псевдоним для installDist задачи с именем stage
 tasks.create("stage") {
     dependsOn("installDist")
 }
