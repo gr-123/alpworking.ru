@@ -11,37 +11,43 @@ fun Application.configureRouting() {
     
     routing {
             
-            // Обслуживание статического контента
-            // https://ktor.io/docs/serving-static-content.html
+        // 
+        // https://ktor.io/docs/serving-static-content.html
+        // 
+        // Обслуживание статических ресурсов
+        // 
+        
+        static("/") {
             
-            static("/") {
-                
-                // установить static пакет по умолчанию (внутри resources папки)
-                staticBasePackage = "static"
-        
-                // рекурсивно обслуживать все файлы из static папки, если URL-адрес и физическое имя файла совпадают
-                // resources(".")
-        
-                // обслуживание отдельных файлов
-                resource("index.html") // 'static/index.html'
+            // статические файлы приложения хранятся внутри 'static' пакета папки 'resources'
+            staticBasePackage = "static" // Изменить пакет ресурсов по умолчанию, установить пакет 'static'
+            // path '/src/main/resources/static/' -> url '/' // ..?
+            
+            // Как обслуживать статические ресурсы:
+            // resources(".")             // Обслуживать все ресурсы, в том числе во вложенных папках
+            resource("index.html")        // Обслуживать отдельные файлы
+            defaultResource("index.html") // Определить ресурс по умолчанию. В этом случае для запросов '/' к серверу Ktor служит 'static/index.html'
+    
+            // Определить подмаршрут 'images':
+            static("images") {
+                // resource("ktor_logo.png") // url -> '/images/ktor_logo.png'
+                // второй необязательный аргумент, который позволяет вам сопоставить физическое имя файла с виртуальным
+                // resource("image.png", "ktor_logo.png") // url -> '/images/ktor_logo.png' или '/images/image.png'
+                resources("images")
+            }
 
-                // определить ресурс по умолчанию
-                defaultResource("index.html") // '/' -> 'static/index.html'
-        
-                // определить подмаршруты по URL-адресу
-                static("images") { // '/images'
-
-                    resource("ktor_logo.png")              // '/images/ktor_logo.png'
-                    resource("image.png", "ktor_logo.png") // '/images/ktor_logo.png' | '/images/image.png'
-                }
-
-                static("assets") {
-
-                    // обслуживание содержимого из папки ресурсов
-                    // позволит любому файлу, расположенному в 'css' папке ресурсов, служить статическим содержимым по заданному шаблону URL
-                    resources("css") // '/assets/styles.css' -> 'files/css/styles.css'
-                    resources("js")
-                }
+            // Определить подмаршрут 'assets':
+            static("assets") {
+                resources("css") // таблицы стилей из папки 'css'. Это означает, что запрос '/assets/styles.css' будет обслуживать 'files/css/styles.css' файл
+                resources("js")  // скрипты из папки 'js'
+            }
+    
+            // Физический путь -> URL-адрес
+            // ----------------------------
+            // static/index.html        /index.html или /
+            // static/ktor_logo.png     /images/ktor_logo.png
+            // static/css/styles.css    /assets/styles.css
+            // static/js/script.js(.gz) /assets/script.js
         }
     }
 

@@ -1,0 +1,8 @@
+body {
+    text-align: center;
+    font-family: sans-serif;
+    background-color: lightcyan;
+    padding: 10px 20px 10px 20px;
+}
+
+.tab { margin-left: 30px; } /* class: 30 пикселей от левого края */
