@@ -1,0 +1,105 @@
+
+/* https://www.geeksforgeeks.org/how-to-add-filter-with-portfolio-gallery-using-html-css-and-javascript/ */
+
+/* wildcard styling
+* {
+    box-sizing: border-box;
+} */
+
+/* padding for whole body
+body {
+    padding: 15px;
+} */
+
+/* styling body
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+h1 {
+    color: green;
+    word-break: break-all;
+} */
+
+/* anchor tag decoration
+a {
+    text-decoration: none;
+    color: #5673C8;
+}
+
+a:hover {
+    color: lightblue;
+} */
+
+/* paragraph tag decoration
+p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+} */
+
+/* row and column decoration
+.row {
+    margin: 0px -14px;
+    padding: 8px;
+}
+
+.row > .column {
+    padding: 6px;
+} */
+
+.column {
+    float: left;
+    width: 15%;
+    /* display: none; */
+}
+
+/* .row:after {
+    content: "";
+    display: table;
+    clear: both;
+} */
+
+/* content decoration */
+.content {
+    background-color: white;
+    padding: 10px;
+    border: 1px solid gray;
+}
+
+/* .show {
+    display: block;
+} */
+
+/* Style the filter buttons */
+/* .bttn {
+    border: none;
+    padding: 8px 14px;
+    background-color: gray;
+}
+
+.bttn:hover {
+    background-color: #007EE5;
+    opacity: 0.8;
+}
+
+.bttn.active {
+    background-color: #007EE5;
+    color: white;
+} */
+
+/* window size 850 width set */
+@media screen and (max-width: 850px) {
+    .column {
+        width: 50%;
+    }
+}
+
+/* window size 400 width set */
+@media screen and (max-width: 400px) {
+    .column {
+        width: 100%;
+    }
+}

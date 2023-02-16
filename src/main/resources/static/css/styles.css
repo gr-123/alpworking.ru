@@ -1,8 +1,69 @@
-body {
-    text-align: center;
-    font-family: sans-serif;
-    background-color: lightcyan;
-    padding: 10px 20px 10px 20px;
+
+/* wildcard styling */
+* {
+    box-sizing: border-box;
 }
 
-.tab { margin-left: 30px; } /* class: 30 пикселей от левого края */
+/* padding for whole body */
+body {
+    padding: 15px;
+}
+
+/* styling body */
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+h1 {
+    color: green;
+    word-break: break-all;
+}
+
+/* anchor tag decoration */
+a {
+    text-decoration: none;
+    color: #5673C8;
+}
+
+a:hover {
+    color: lightblue;
+}
+
+/* paragraph tag decoration */
+p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+
+}
+
+/* Вывод картинок */
+.row {
+    margin: 0px -14px;
+    padding: 8px;
+}
+
+/* Завершение вывода картинок */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* 30 пикселей от левого края */
+.tab { margin-left: 30px; }
+
+/* подсвечиваем теги без необходимых атрибутов */
+/* img:not([alt]),
+label:not([for]),
+input[type=submit]:not([value]) {
+  outline:2px solid red;
+} */
+/* тревога, если первый child внутри списка не li и прочие похожие примеры */
+/* ul > *:not(li),
+ol > *:not(li),
+dl > *:not(dt):not(dd) {
+  outline:2px solid red;
+} */
