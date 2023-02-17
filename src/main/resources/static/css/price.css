@@ -72,7 +72,7 @@ td: только первые */
 .table tbody tr:nth-child(1) td:first-child, 
 .table tbody tr:nth-child(3) td:first-child, 
 .table tbody tr:nth-child(5) td:first-child {
-	font-weight: bold;
+	/* font-weight: bold; */
 }
 /* 
 tr: (n+7)        все строки, после шестой
@@ -80,7 +80,7 @@ td: (n+1):(-n+2) диапазон с 1 по 2 */
 .table tbody 
     tr:nth-child(n+7) 
     td:nth-child(n+1):nth-child(-n+2) {
-	    font-weight: bold;
+	    /* font-weight: bold; */
 }
 
 
@@ -92,7 +92,61 @@ td: (n+1):(-n+2) диапазон с 1 по 2 */
     tr:not(:nth-child(-n+5)) 
     td:nth-child(n+1):nth-child(-n+2) {... */
 
-    
+        
+/* https://stackoverflow.com/questions/3053205/how-create-table-only-using-div-tag-and-css */
+#resp-table {
+    width: 100%;
+    display: table;
+}
+#resp-table-body{
+    display: table-row-group;
+}
+.resp-table-row{
+    display: table-row;
+}
+.table-body-cell{
+    display: table-cell;
+    border: 1px solid #dddddd;
+    /* padding: 8px; */
+    line-height: 1.42857143;
+    /* vertical-align: top; */
+    vertical-align: middle;
+}
+/* 
+<div id="resp-table">
+    <div id="resp-table-body">
+        <div class="resp-table-row"> 
+            <div class="table-body-cell">
+                col 1 
+            </div>
+            <div class="table-body-cell">
+                col 2 
+            </div>
+            <div class="table-body-cell">
+                col 3 
+            </div>
+            <div class="table-body-cell">
+                col 4 
+            </div>
+        </div>
+        <div class="resp-table-row"> 
+            <div class="table-body-cell">
+                second row col 1 
+            </div>
+            <div class="table-body-cell">
+                second row col 2 
+            </div>
+            <div class="table-body-cell">
+                second row col 3 
+            </div>
+            <div class="table-body-cell">
+                second row col 4 
+            </div>
+        </div>
+    </div>
+</div> */
+
+
 
 /* 
 codepen.io CodePen — онлайн-редактор для фронтендеров

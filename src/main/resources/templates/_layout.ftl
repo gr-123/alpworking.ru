@@ -66,7 +66,7 @@
 <ul>
     <li><a href="/">Главная</a></li> <#-- Home -->
     <li><a href="/price">Цены</a></li>
-    <#--  <li><a href="/about-us">About Us</a></li> AboutUS  -->
+    <li><a href="/about">О нас</a></li>
 </ul>
 </header>
 
@@ -90,7 +90,7 @@
             <#--  <a href="/conditions">Conditions</a> Conditions  -->
         </div>
         <div class="footer-name">
-            <p>&copy; 2022 - success</p>
+            <small>&copy; Copyright 2023, alpworking blog</small>
         </div>
     </div>
 </footer>

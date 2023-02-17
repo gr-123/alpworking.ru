@@ -54,6 +54,10 @@ fun Application.configureRouting() {
                 resources("js") // скрипты из папки 'js'
             }
 
+            static("about") {
+                defaultResource("aboutme.html") 
+            }
+
             // Физический путь -> URL-адрес
             // ----------------------------
             // static/index.html        /index.html или /
