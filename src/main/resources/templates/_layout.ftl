@@ -65,8 +65,8 @@
 <h5>Москва и Московская область</h5>
 <ul>
     <li><a href="/">Главная</a></li> <#-- Home -->
-    <li><a href="/price">Цены</a></li>
-    <li><a href="/about">О нас</a></li>
+    <#--  <li><a href="/price">Цены</a></li>  -->
+    <#--  <li><a href="/about">О нас</a></li>  -->
 </ul>
 </header>
 
