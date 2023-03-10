@@ -1,0 +1,238 @@
+/* 
+В вашем html
+
+    <table class="table1">
+    <tr>
+    <td>
+    ...
+    </table>
+
+    <table class="table2">
+    <tr>
+    <td>
+    ...
+    </table>
+
+В вашем css:
+
+    table.table1 {...}
+    table.table1 tr {...}
+    table.table1 td {...}
+
+    table.table2 {...}
+    table.table2 tr {...}
+    table.table2 td {...} */
+
+/* #box { */
+    /* height: 90px; */
+    /* width: 270px; */
+    /* background: #000; */
+    /* font-size: 48px; */
+    /* color: #FFF; */
+    /* margin-top: 20px; */
+    /* margin-left: 5px; */
+    /* text-align: center; */
+    /* font-style: oblique; */    
+
+    /* display: table-cell;
+    vertical-align: middle; */
+/* } */
+
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #dddddd;
+    border-collapse: collapse; 
+}
+.table thead th {
+	font-weight: bold;
+	text-align: left;
+    border: 1px solid #dddddd;
+	padding: 10px 15px;
+	background: #d8d8d8;
+	font-size: 14px;
+}
+.table tbody td {
+	text-align: left;
+    border: 1px solid #dddddd;
+	padding: 10px 15px;
+	font-size: 14px;
+
+    /* Выравнивание текста 
+    вертикально по середине */
+    display: table-cell;
+    vertical-align: middle;
+}
+/* (even) - четные строки или (2n), (odd) - нечетные или (2n+1). */
+.table tbody tr:nth-child(even){
+	background: #f3f3f3;
+}
+
+.table thead 
+    tr:nth-child(2) {
+	    border-bottom: 2px solid #716561;
+}
+
+/* Нижняя граница столбцов */
+/* tr: 1,3,5 строки
+   td: только первые */
+.table tbody tr:nth-child(1) td:first-child, 
+.table tbody tr:nth-child(3) td:first-child, 
+.table tbody tr:nth-child(5) td:first-child, 
+/* tr: все, исключая 1,3,5
+   td: все */
+.table tbody 
+    tr:not(:nth-child(1)):not(:nth-child(3)):not(:nth-child(5)) 
+    td {
+	    border-bottom: 2px solid #716561;
+}
+
+/* 
+    Выделение жирным шрифтом
+    в 1,3,5 строках первых столбцов
+
+tr: 1,3,5 строки
+td: только первые */
+.table tbody tr:nth-child(1) td:first-child, 
+.table tbody tr:nth-child(3) td:first-child, 
+.table tbody tr:nth-child(5) td:first-child {
+	/* font-weight: bold; */
+}
+/* 
+tr: (n+7)        все строки, после шестой
+td: (n+1):(-n+2) диапазон с 1 по 2 */
+.table tbody 
+    tr:nth-child(n+7) 
+    td:nth-child(n+1):nth-child(-n+2) {
+	    /* font-weight: bold; */
+}
+
+
+/* 
+.table tbody 
+    tr:not(:nth-child(1)):not(:nth-child(3)):not(:nth-child(5)) 
+    td:nth-child(n+1):nth-child(-n+2) {...
+.table tbody 
+    tr:not(:nth-child(-n+5)) 
+    td:nth-child(n+1):nth-child(-n+2) {... */
+
+        
+/* https://stackoverflow.com/questions/3053205/how-create-table-only-using-div-tag-and-css */
+#resp-table {
+    width: 100%;
+    display: table;
+}
+#resp-table-body{
+    display: table-row-group;
+}
+.resp-table-row{
+    display: table-row;
+}
+.table-body-cell{
+    display: table-cell;
+    border: 1px solid #dddddd;
+    /* padding: 8px; */
+    line-height: 1.42857143;
+    /* vertical-align: top; */
+    vertical-align: middle;
+}
+
+/* 
+<div id="resp-table">
+    <div id="resp-table-body">
+        <div class="resp-table-row"> 
+            <div class="table-body-cell">
+                col 1 
+            </div>
+            <div class="table-body-cell">
+                col 2 
+            </div>
+            <div class="table-body-cell">
+                col 3 
+            </div>
+            <div class="table-body-cell">
+                col 4 
+            </div>
+        </div>
+        <div class="resp-table-row"> 
+            <div class="table-body-cell">
+                second row col 1 
+            </div>
+            <div class="table-body-cell">
+                second row col 2 
+            </div>
+            <div class="table-body-cell">
+                second row col 3 
+            </div>
+            <div class="table-body-cell">
+                second row col 4 
+            </div>
+        </div>
+    </div>
+</div> */
+
+
+
+/* 
+codepen.io CodePen — онлайн-редактор для фронтендеров
+
+псевдоклассы
+
+    first-child
+    last-child
+    only-child
+    nth-child()
+    nth-last-child()
+
+    first-of-type
+    last-of-type
+    only-of-type
+    nth-of-type()
+    nth-last-of-type()
+
+:nth-child(3)    выбрать один определенный элемент
+:nth-child(3n)   выбрать каждый третий элемент (третий, шестой и девятый элементы и т.д)
+:nth-child(n+11) Все, после десятого
+:nth-child(-n+3) инвертирует выборку и выбирает первые три элемента
+1	    1	               Первый элемент, является синонимом псевдокласса :first-child.
+5	    5	               Пятый элемент.
+2n	    2, 4, 6, 8, 10,…   Все четные элементы, аналог значения even.
+2n+1	1, 3, 5, 7, 9,…	   Все нечетные элементы, аналог значения odd.
+3n	    3, 6, 9, 12, 15,…  Каждый третий элемент
+3n+2	2, 5, 8, 11, 14,…  Каждый третий элемент, начиная со второго
+n+4	    4, 5, 6, 7, 8,…	   Все элементы, кроме первых трёх
+-n+3	3, 2, 1	           Первые три элемента
+5n-2	3, 8, 13, 18, 23,… —
+even	2, 4, 6, 8, 10,…   Все четные элементы.
+odd	    1, 3, 5, 7, 9,…	   Все нечетные элементы.
+
+(p:nth-child(n+8):nth-child(-n+15))
+    с восьмого по пятнадцатый <p>
+
+ p:not(:empty)
+    чтобы к этим элементам не применялись стили
+
+p:first-of-type 
+    первый 'p' элемент
+
+p:first-of-type::first-letter
+    первая заглавная буква для всех элементов только на первый параграф
+
+p:nth-of-type(odd)
+    только нечетные теги p, а не просто нечетные элементы. 
+
+:nth-child(n + 2):nth-child(-n + 5)
+    все элементы со второго по пятый
+
+table.myClass tr.row:nth-child(odd){}
+    любой tr элемент, который соответствует всем следующим независимым условиям:
+        это дочерний элемент своего родителя с нечетным номером;
+        он имеет класс "строка"; и
+        это потомок элемента table, который имеет класс "myClass".
+
+.mytable tbody tr:first-child td:nth-child(5)
+Или
+.mytable tbody tr:nth-child(1) td:nth-child(5)
+    5-й элемент td, который вложен в 1-й элемент tr, который далее вложен в tbody, который далее вложен в ЛЮБОЙ элемент, имеющий класс .mytable
+ */
+

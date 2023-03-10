@@ -10,10 +10,12 @@ import java.io.File
 import java.io.IOException
 
 // https://ktor.io/docs/structuring-applications.html#group_routing_definitions
-fun Application.serviceRoutes() {
+fun Application.SnowRoutes() {
+
     routing {
-        getServiceRoute()
+        getSnowRoute()
     }
+    
     // CustomerRoutes.kt
         // listCustomersRoute()
         // customerByIdRoute()
@@ -29,7 +31,7 @@ fun Application.serviceRoutes() {
 // https://ktor.io/docs/creating-http-apis.html#customer_routing
 
 // https://ktor.io/docs/structuring-applications.html#group_by_file
-fun Route.getServiceRoute() {
+fun Route.getSnowRoute() {
 
     // каталог с фото портфолио услуг уборки снега
     val filename = "src/main/resources/static/images/services/snow"
@@ -83,11 +85,21 @@ fun Route.getServiceRoute() {
     // var content = ins.readBytes().toString(Charset.defaultCharset())
     // println(content)
 
+    // URL: "<...>/services"
     route("/services") {
+
+        // URL: "<...>/services/snow"
         route("/snow") {
             get {
-                // call.respondText("Hello getServiceRoute")
-                call.respond(FreeMarkerContent("snow.ftl", mapOf("fileList" to fileList)))
+                // call.respondText("Hello ...")
+                call.respond(FreeMarkerContent("services/snow/snow_show.ftl", mapOf("fileList" to fileList)))
+            }
+
+            // URL: "<...>/services/snow/price"
+            route("/price") {
+                get {
+                    call.respond(FreeMarkerContent("services/snow/snow_price.ftl", model = null))
+                }
             }
         }
     }

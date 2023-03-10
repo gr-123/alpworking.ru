@@ -43,7 +43,7 @@
                     <p>
                         <a title="Написать в Whatsapp" aria-label="Chat on WhatsApp" 
                             href="https://wa.me/79957708774?text=" target="_blank">
-                        <img alt="WhatsApp" 
+                            <img alt="WhatsApp" 
                                 src="/images/whatsapp/WhatsAppButtonGreenSmall.svg"/>
                         </a> |
                         <a href="tg://resolve?domain=@aleksey_gr">
@@ -53,19 +53,27 @@
                             Viber
                         </a>
                     </p>
-                    <p>тел. +7 (995) 770-87-74<br>
-                    Пн-Сб: с 9 до 18, Вс: вых.</p>
+                    <p><span>тел. +7 (995) 770-87-74</span><br>
+                    Пн-Сб: 9.00-18.00</p>
                 </div>
             </td>
         </tr>
 	</tbody>
 </table>
 
-<h1>Высотные работы</h1>
+<h1>ALP Work (s Group)</h1>
+<h2>Промышленный альпинист</h2>
 <h5>Москва и Московская область</h5>
+
+<h5>Высотные работы методом канатного доступа</h5>
+
+<p>Нет автовышки?</p>
+<p>Нет строительных лесов?</p>
+<p>Тогда для нас есть работа. Звоните прямо сейтчас!</p>
+
 <ul>
     <li><a href="/">Главная</a></li> <#-- Home -->
-    <#--  <li><a href="/price">Цены</a></li>  -->
+    <li><a href="/price">Цены</a></li>
     <#--  <li><a href="/about">О нас</a></li>  -->
 </ul>
 </header>
@@ -80,7 +88,6 @@
     <p></p>
 
 <p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>
-
 </div>
 <footer>
     <div class="footer-gen" style="text-align: center; font-family: sans-serif">
@@ -91,6 +98,11 @@
         </div>
         <div class="footer-name">
             <small>&copy; Copyright 2023, alpworking blog</small>
+            <#--  
+            Владельцам сайтов: 
+                изменения в законе о персональных данных
+                Как избежать штрафов и что нужно знать о новых поправках
+                https://tilda.education/articles-personal-data-law  -->
         </div>
     </div>
 </footer>

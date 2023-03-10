@@ -4,7 +4,10 @@
 
 // })();
 
-
+(function(){
+    console.log("Hello FreeMarker Form!");
+  })();
+  
 
 function message(msg) {
     alert(msg);

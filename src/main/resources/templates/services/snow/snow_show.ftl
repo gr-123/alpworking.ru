@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="services" type="kotlin.collections.List<ru.alpworking.models.SnowService>" -->
-<#import "_layout.ftl" as layout />
+<#import "/_layout.ftl" as layout />
 <@layout.main_layout 
     keywords="Промышленный альпинизм, Уборка снега и наледи с крыш, удаление сосулек"
     title="Уборка снега и наледи с крыш, удаление сосулек"
@@ -16,7 +16,7 @@
 <#if section="content">
 
 <h2>Уборка снега и наледи с крыш, удаление сосулек.
-<br><a href="/price">Стоимость работ.</a></h2>
+<br><a href="/services/snow/price">Стоимость работ по уборке снега, наледи и сосулек.</a></h2>
 
 <#--  Фотогалерея на CSS  -->
 <div id="gall">

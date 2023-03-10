@@ -3,6 +3,7 @@ package ru.alpworking
 import io.ktor.server.application.*
 import ru.alpworking.plugins.*
 import ru.alpworking.routes.services.snow.*
+import ru.alpworking.routes.services.sealing.*
 import ru.alpworking.routes.*
 
 fun main(args: Array<String>): Unit =
@@ -19,7 +20,8 @@ fun Application.module() {
     configureRouting()
 
     // https://ktor.io/docs/structuring-applications.html#group_routing_definitions
-    serviceRoutes() // routes/services/snow/SnowRoutes.kt: fun Application.orderRoutes() { routing { ...
+    SnowRoutes()    // routes/services/snow/SnowRoutes.kt: fun Application.orderRoutes() { routing { ...
+    SealingRoutes() // routes/services/sealing/SealingRoutes.kt
     priceRoutes()
     homeRoutes()
 }
