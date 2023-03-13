@@ -7,16 +7,43 @@
 
 <#if section = "styles">
     <link rel="stylesheet" href="/assets/css_gallery.css">
+    <link rel="stylesheet" href="/assets/price.css">
 </#if>
 
 <#if section = "scripts">
     <#--  <script src="/assets/script.js"></script>  -->
 </#if>
 
+<#--  IF CONTENT >>>  -->
 <#if section="content">
 
+
+
 <h2>Уборка снега и наледи с крыш, удаление сосулек.
-<br><a href="/services/snow/price">Стоимость работ по уборке снега, наледи и сосулек.</a></h2>
+<br><a href="/">На главную</a></h2>
+<#--  <br><a href="/services/snow/price">Стоимость работ по уборке снега, наледи и сосулек.</a></h2>  -->
+
+<table class="table">
+<thead>
+    <tr><th>Наименование работ</th><th style="text-align: center;">Стоимость</th></tr>
+</thead>
+<tbody>
+    <tr>
+        <td>
+            Очистка от снега всей площади кровли.
+            <br><span style="font-weight: normal;"><i>( Крыши без ограждений +10 руб./м<sup>2</sup> )<i></span>
+        </td>
+        <td style="text-align: center;">35 руб./м<sup>2</sup></td>
+    </tr>
+    <tr>
+        <td>
+            Очистка снега по периметру кровли на расстоянии 1,5 метров от края
+            <br><span style="font-weight: normal;"><i>( Крыши без ограждений +5 руб./м.п. )</i></span>
+        </td>
+        <td style="text-align: center;">50 руб./м.п.</td>
+    </tr>
+</tbody>
+</table>
 
 <#--  Фотогалерея на CSS  -->
 <div id="gall">
@@ -177,5 +204,8 @@ function image(img) {
 </p>
 </article>  -->
 
+
+
+<#--  <<< IF CONTENT  -->
 </#if>
 </@layout.main_layout>

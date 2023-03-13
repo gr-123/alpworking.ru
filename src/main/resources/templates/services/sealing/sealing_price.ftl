@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="prices" type="kotlin.collections.List<ru.alpworking.models.PriceService>" -->
+<#-- @ftlvariable name="sealings" type="kotlin.collections.List<ru.alpworking.models.SealingService>" -->
 
 <#import "/_layout.ftl" as layout />
 <@layout.main_layout 
@@ -30,7 +30,7 @@
 <#--  <p><a name="sealing-price"></a></p>  --><#-- якорь -->
 <table class="table">
 <thead>
-    <tr><th>Наименование работ<br><span style="font-weight: normal;"><i>( без учета стоимости материалов )<i></span></th><th>Стоимость<br>до 100 пог.м./руб.</th></tr>
+    <tr><th>Наименование работ<br><span style="font-weight: normal;"><i>( без учета стоимости материалов )<i></span></th><th style="text-align: center;">Стоимость<br>до 100 пог.м./руб.</th></tr>
 </thead>
 <tbody>
     <tr>
@@ -88,18 +88,13 @@
     <tr><td colspan="2"><br></td></tr>
 
     <tr><td>Герметизация трещин на фасаде</td><td>550</td></tr>
-    <tr><td>Обработка противогрибковым средством</td><td>110</td></tr>
+    <tr><td>Обработка противогрибковым средством</td><td>110 50</td></tr>
     <tr><td>Грунтовка швов</td><td>300</td></tr>
     <tr><td>Герметизацияпримыкания  оконного блока к стенам</td><td>450</td></tr>
     <tr><td>Герметизация козырьков на балконах и лоджиях</td><td>550</td></tr>
-    <tr><td>Герметизация фальцев металлической кровли</td><td>550</td></tr>
-    <tr>
-        <td>
-            Установка гидрозамка (точка)
-            <br><span style="font-weight: normal;"><i>(Герметизация и заполнение монтажной пеной перекрестного участка швов)<i></span>
-        </td>
-        <td>1100/шт.</td>
-    </tr>
+    <tr><td>Герметизация фальцев металлической кровли</td><td>550 120</td></tr>
+    <tr><td>Герметизация стеклянных и прозрачных фасадов</td><td>90</td></tr>
+    <tr><td>Установка гидрозамка (точка)<br><span style="font-weight: normal;"><i>(Герметизация и заполнение монтажной пеной перекрестного участка швов)<i></span></td><td>1100 / шт.</td></tr>
 
 </tbody>
 </table>

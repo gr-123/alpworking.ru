@@ -31,9 +31,12 @@
 		<tr>
             <td>
                 <a href="/">
-                    <img alt="Logo" width="auto" height="110px" 
+                    <img alt="Logo" width="650px" height="110px" 
                         src="/images/logo.jpg">
                 </a>
+
+                <br><span style="color: green; font-size: 2em">Высотные работы</span>
+                <br><span style="font-size: 1em">Промышленный альпинист</span>
             </td>
             <td style="text-align: right; height:70px; margin-right: 1em;">
                 <p></p>
@@ -43,7 +46,7 @@
                     <p>
                         <a title="Написать в Whatsapp" aria-label="Chat on WhatsApp" 
                             href="https://wa.me/79957708774?text=" target="_blank">
-                            <img alt="WhatsApp" 
+                            <img style="height:20px;" alt="WhatsApp" 
                                 src="/images/whatsapp/WhatsAppButtonGreenSmall.svg"/>
                         </a> |
                         <a href="tg://resolve?domain=@aleksey_gr">
@@ -52,28 +55,21 @@
                         <a href="viber://forward?text=79957708774">
                             Viber
                         </a>
+                        <#--  <p>Звоните прямо сейтчас!</p>  -->
+                        <br>support@alpworking.ru
+                        <br><span>тел. +7 (995) 770-87-74</span>
+                        <br>Пн-Сб: 9.00-18.00
                     </p>
-                    <p><span>тел. +7 (995) 770-87-74</span><br>
-                    Пн-Сб: 9.00-18.00</p>
                 </div>
             </td>
         </tr>
 	</tbody>
 </table>
-
-<h1>ALP Work (s Group)</h1>
-<h2>Промышленный альпинист</h2>
-<h5>Москва и Московская область</h5>
-
-<h5>Высотные работы методом канатного доступа</h5>
-
-<p>Нет автовышки?</p>
-<p>Нет строительных лесов?</p>
-<p>Тогда для нас есть работа. Звоните прямо сейтчас!</p>
+<#--  <h5>Москва и Московская область</h5>  -->
 
 <ul>
     <li><a href="/">Главная</a></li> <#-- Home -->
-    <li><a href="/price">Цены</a></li>
+    <#--  <li><a href="/price">Цены</a></li>  -->
     <#--  <li><a href="/about">О нас</a></li>  -->
 </ul>
 </header>
@@ -82,6 +78,12 @@
 
     <#-- Content of the body -->
     <#nested "content">
+
+    <#--  comment>>>  -->
+    <#if false>
+        ...
+    <#--  <<<comment  -->
+    </#if>
 
     <#-- footer stuff -->
 
