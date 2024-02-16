@@ -197,7 +197,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
 
           <li class="nav-item">
-            <a href="<?= route_to('user.home'); ?>" class="nav-link <?= (current_url() == base_url('user/home')) ? 'active' : ''; ?>">
+            <a href="<?= route_to('admin.home'); ?>" class="nav-link <?= (current_url() == base_url('admin')) ? 'active' : ''; ?>">
               <i class="nav-icon fas fa-home"></i>
               <p>
                 Home
@@ -205,7 +205,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?= route_to('user.profile'); ?>" class="nav-link <?= (current_url() == base_url('user/profile')) ? 'active' : ''; ?>">
+            <a href="<?= route_to('admin.profile'); ?>" class="nav-link <?= (current_url() == base_url('admin/profile')) ? 'active' : ''; ?>">
               <i class="nav-icon fas fa-user"></i>
               <p>
                 Profile
@@ -230,7 +230,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<?= route_to('user.home'); ?>">Home</a></li>
+              <li class="breadcrumb-item"><a href="<?= route_to('admin.home'); ?>">Home</a></li>
               <li class="breadcrumb-item active"><?= (isset($pageTitle)) ? $pageTitle : 'Document'; ?></li>
             </ol>
           </div><!-- /.col -->

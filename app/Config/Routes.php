@@ -50,16 +50,16 @@ service('auth')->routes($routes);
 // Примечание
 // Параметры, передаваемые во внешнюю group() (например, пространство имен и фильтр), не объединяются с параметрами внутренней group().
 // 
-// $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'group:admin,superadmin'], static function($routes){}
-$routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static function ($routes) { // admin/
-    $routes->get('/', [AdminController::class, 'index']); // use App\Controllers\Admin\AdminController
-    // $routes->get('profile', [AdminController::class, 'profile']);
+// $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'group:admin,superadmin'], static function($routes){
+$routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static function ($routes) {
+    $routes->get('/', [AdminController::class, 'index'], ['as' => 'admin.home']);
+    $routes->get('profile', [AdminController::class, 'profile'], ['as' => 'admin.profile']);
     // $routes->post('adduser', 'AdminController::adduser'); // /admin/adduser // $this->request->getPost()
     // $routes->match(["get", "post"], 'namemethod', 'AdminController::namemethod');
     
 	// $routes->group('users', ['namespace' => 'App\Controllers\Admin', 'filter' => 'permission:admin.access'], function ($routes) {}
 	$routes->group('users', ['namespace' => 'App\Controllers\Admin'], function ($routes) { // admin/users/
-        // $routes->get('/', 'UsersController::index');
+        // $routes->get('/', 'UsersController::index');//, ['as' => 'admin.user.home']
         // $routes->get('list', 'UsersController::list');
         // $routes->delete('users/delete/(:segment)', 'UsersController::delete', ['filter' => 'admin-auth:dual,noreturn']); // ['dual', 'noreturn'] in $arguments filter’s before() and after()
 	});
