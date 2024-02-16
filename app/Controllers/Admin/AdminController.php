@@ -19,6 +19,7 @@ class AdminController extends BaseController
     public function index()
     {
         // echo "AdminController<pre>";
+        // echo \CodeIgniter\CodeIgniter::CI_VERSION;
         // echo "PHP is working!\n"; echo phpinfo();
         // auth_helper Помощник по аутентификации https://codeigniter4.github.io/shield/authentication/#auth-helper
         // echo auth()->user()->username; // namespace CodeIgniter\Shield\Entities; class User extends Entity
