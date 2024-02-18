@@ -5,7 +5,7 @@
 // 
 use CodeIgniter\Router\RouteCollection;
 use App\Controllers\Admin\AdminController;
-// use App\Controllers\Admin\UsersController;
+use App\Controllers\Admin\UsersController;
 use App\Controllers\Home;
 
 // https://codeigniter4.github.io/userguide/incoming/routing.html
@@ -51,15 +51,36 @@ service('auth')->routes($routes);
 // Параметры, передаваемые во внешнюю group() (например, пространство имен и фильтр), не объединяются с параметрами внутренней group().
 // 
 // $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'group:admin,superadmin'], static function($routes){
-$routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static function ($routes) {
+$routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'group:superadmin'], static function($routes){
+    // 
+    // Вы можете настроить, куда будет перенаправляться пользователь при входе в систему, с помощью метода loginRedirect() конфигурационного файла app/Config/Auth.php
+    // Например: администраторы на /admin, а все остальные группы на /
+    // return $this->getUrl(auth()->user()->inGroup('admin') ? '/admin' : setting('Auth.redirects')['login']); // ... auth()->user()->can('admin.access')
+    // 
     $routes->get('/', [AdminController::class, 'index'], ['as' => 'admin.home']);
     $routes->get('profile', [AdminController::class, 'profile'], ['as' => 'admin.profile']);
     // $routes->post('adduser', 'AdminController::adduser'); // /admin/adduser // $this->request->getPost()
     // $routes->match(["get", "post"], 'namemethod', 'AdminController::namemethod');
+
+    // Обратите внимание, что параметры (filter), переданные во внешнюю группу(), не объединяются с параметрами внутренней группы().
+    // $routes->group(
+    //     '',
+    //     ['filter' => ['group:admin,superadmin', 'permission:users.manage']],
+    //     static function ($routes) {
+    //         $routes->resource('users');
+    //     }
+    // );
     
+    // Примечание
+    // https://codeigniter.com/user_guide/incoming/routing.html#multiple-filters
+    // Если вы установили для маршрута более одного фильтра, вам необходимо включить несколько 
+    // фильтров (установить свойство $multipleFilters true в app/Config/Feature.php). 
+    // Важный! 
+    // Эта функция отключена по умолчанию. Потому что это нарушает обратную совместимость.
+
 	// $routes->group('users', ['namespace' => 'App\Controllers\Admin', 'filter' => 'permission:admin.access'], function ($routes) {}
 	$routes->group('users', ['namespace' => 'App\Controllers\Admin'], function ($routes) { // admin/users/
-        // $routes->get('/', 'UsersController::index');//, ['as' => 'admin.user.home']
+        $routes->get('/', 'UsersController::index');//, ['as' => 'admin.user.home']
         // $routes->get('list', 'UsersController::list');
         // $routes->delete('users/delete/(:segment)', 'UsersController::delete', ['filter' => 'admin-auth:dual,noreturn']); // ['dual', 'noreturn'] in $arguments filter’s before() and after()
 	});

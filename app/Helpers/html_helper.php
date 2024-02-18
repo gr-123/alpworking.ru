@@ -1,9 +1,6 @@
 <?php
 
-// app/Helpers/html_helper.php # https://developerhowto.com/2022/12/27/create-a-codeigniter-4-application/
-
-
-
+// app/Helpers/html_helper.php
 
 // См.также Класс таблицы HTML
 // https://codeigniter.com/user_guide/outgoing/table.html#html-table-class
@@ -11,8 +8,33 @@
 
 
 // расширяем HTML Helper (создание ), добавляя функции для создания HTML-таблиц на основе результатов базы данных (массива строк)
+// https://developerhowto.com/2022/12/27/create-a-codeigniter-4-application/
+
+// Working with data – Migrations, Models, and Seeds
+// Create a Migration File
+// Migration example: Users table
+// Run the first migration
+// Create a Database Seeder (Table data)
+// Seed Example: Users data
+// Run the seeder
+// php spark db:table [tablename]
+// Create a Base Model
+// Create a Model
+// Model Example: Users Model
+// Working with Controller and Routes
+// Create a Controller
+// Controller Basic Example: Users List
+// Setup a Route for the controller
+// Helpers to the rescue
+// Adding and extending helpers
+// Creating and Customizing Views
+// View example: Users
+// Setup a Common Page Layout
+
+
 
 // Теперь мы можем использовать эти вспомогательные функции для изменения Userконтроллера ( app/Controllers/User.php) и возврата таблицы HTML вместо данных JSON:
+// 
 // <?php
 // namespace AppControllers;
 // use AppControllersBaseController;
@@ -29,6 +51,11 @@
 //     }
 // }
 
+// view:
+// 
+// <?php
+    // helper('html');
+    // if(isset($items)){ echo htmlTable($items,null,["border"=>1]); }
 
 /**
  * Generate HTML attributes from array

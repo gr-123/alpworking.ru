@@ -1,34 +1,39 @@
 <?php
 
+// php spark make:controller Admin\\Admin --suffix # namespace App\Controllers\Admin; class AdminController extends BaseController
+
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+// use CodeIgniter\Shield\Entities\User;
+// use CodeIgniter\Shield\Models\UserModel;
 
 class AdminController extends BaseController
 {
-	// https://onlinewebtutorblog.com/codeigniter-4-multi-auth-user-role-wise-login/
-    // public function __construct()
-    // {
-    //     if (session()->get('role') != "admin") {
-    //         echo 'Access denied';
-    //         exit;
-    //     }
-    // }
+
+    // ci4-admin посмотреть примеры view
+    // https://github.com/bvrignaud/ci4-admin/tree/master/src/Views
 
     public function index()
     {
         // echo "AdminController<pre>";
         // echo \CodeIgniter\CodeIgniter::CI_VERSION;
         // echo "PHP is working!\n"; echo phpinfo();
-        // auth_helper Помощник по аутентификации https://codeigniter4.github.io/shield/authentication/#auth-helper
-        // echo auth()->user()->username; // namespace CodeIgniter\Shield\Entities; class User extends Entity
-        // echo auth()->user()->getEmail(); // shield/src/Entities/User.php
-        // echo auth()->user()->created_at->toDateTimeString();
-        // 
-        // print_r(['данные пользователя, вошедшего в систему:' => auth()->user()->toRawArray()]);
 
-		$data['pageTitle']='Home';
+        // Get the User Provider (UserModel by default)
+        $users = auth()->getProvider(); // use CodeIgniter\Shield\Entities\User;
+        // php spark db:table users // id = 1
+        $user = $users->findById(1);
+
+        $entity = array();
+        $entity['groups']= $user->getGroups();
+        $entity['permissions']= $user->getPermissions();
+        
+		$data = [
+			'pageTitle' => "Home",
+			'entity' => $entity
+		];
+
 		return view('admin/dashboard/home', $data);
     }
 
@@ -37,29 +42,66 @@ class AdminController extends BaseController
 		$data['pageTitle']='Profile';
 		return view('admin/dashboard/profile', $data);
     }
-
-    // все пользователи с их группой
-    // https://github.com/codeigniter4/shield/discussions/956
-    public function listAllUsers()
+    
+    // войти в систему, используя свой адрес электронной почты и пароль
+    public function loginAttempt()
     {
-        // Это простой пример, конечно, вам нужно немного больше знаний. 
-        // Возможно, вам придется расширить модель https://codeigniter4.github.io/shield/customization/user_provider/
-        // или даже CodeIgniter\Shield\Entities\User. 
-        // Или используйте объединение таблиц https://codeigniter.com/user_guide/database/query_builder.html?highlight=join#id16
-        $users = auth()->getProvider();
+        // Многие методы аутентификации возвращают класс CodeIgniter\Shield\Result:
+        // 
+        // isOK()        // Возвращает логическое значение, указывающее, была ли проверка успешной или нет.
+        // reason()        // Возвращает сообщение, которое может быть отображено пользователю в случае неудачной проверки.
+        // extraInfo()        // Может возвращать пользовательский бит информации. Они будут подробно описаны в описаниях методов ниже.
 
-        // table 
-        $table = new \CodeIgniter\View\Table();
-        $table->setHeading(['username', 'Groups']);
+        // Аутентификатор сеанса
+        // https://shield.codeigniter.com/references/authentication/session/
 
-        foreach ($users->findAll() as $user) {
-            $groups =  implode(",", $user->getGroups());
-            $table->addRow([$user->username,$groups]);
-            echo $table->generate();
+        $credentials = [
+            'email'    => $this->request->getPost('email'),
+            'password' => $this->request->getPost('password')
+        ];
+        
+        // check()
+        // Если вы хотите проверить учетные данные пользователя, не входя в систему
+        // $validCreds = auth()->check($credentials); // Возвращенный экземпляр Result
+
+        // attempt()
+        $result = auth()->attempt($credentials); // Возвращенный объект Response
+
+        // Вход в систему фиксируется и записывается в таблицу 'auth_logins', независимо от результата.
+        
+        // Если попытка не удалась, запускается событие неудачного входа в систему с массивом учетных данных в качестве единственного параметра
+        if (! $result->isOK()) {
+            return redirect()->back()->with('error', $result->reason());
         }
 
-        // У Shield есть команда для вывода списка пользователей: php spark shield:user --help
-        // list: https://github.com/codeigniter4/shield/blob/fb4142bd32ea42059062be8508cc2925c52c0c93/src/Commands/User.php#L515
+        // В случае успешного завершения attempt() пользователь входит в систему.
+        if ($result->isOK()) {
+            $user = $result->extraInfo(); // данные пользователя
+
+            // Если $allowRemembering true в Auth файле конфигурации, вы можете указать аутентификатору сеанса 
+            // установить безопасный файл cookie «запомнить меня».
+            // $loginAttempt = auth()->remember()->attempt($credentials);
+
+            // Активация пользователя
+            // Пользователи автоматически активируются в рамках EmailActivatorдействия. Их можно активировать вручную с помощью activate()метода сущности User.
+            // $user->activate();        
+
+            // Проверка статуса активации
+            if ($user->isActivated()) {
+                //
+            }
+
+            // Деактивация пользователя
+            // Пользователей можно деактивировать вручную с помощью deactivate()метода объекта User.
+            // $user->deactivate();            
+        }
+
+        // logout()
+        // Вы можете вызвать logout()метод, чтобы выйти из текущего сеанса пользователя. Это приведет к уничтожению и восстановлению текущего сеанса, очистке всех текущих токенов «запомнить меня» для этого пользователя и запуску события logout.
+        // auth()->logout();
+
+        // forget()
+        // Этот forget метод удалит все токены «запомнить меня» для текущего пользователя, чтобы они не были запомнены при следующем посещении сайта.
     }
 
     public function editFieldTable()
@@ -117,12 +159,10 @@ class AdminController extends BaseController
         // Правильно ли я понял ваш вопрос и был ли ответ полным?
         // да, это работа. спасибо
     }
-  
-    public function addUser()
-	{
-		if($this->request->getPost()){
-			//.. post submit code
-		}
-		// .. code here
-	}
+
+    // Codeigniter 4 — Shield: Каков рабочий процесс создания новых пользователей?
+    // https://stackoverflow.com/questions/76270968/codeigniter-4-shield-what-is-the-workflow-for-creating-new-users
+
+    // Codeigniter 4 Shield: как выдать токен доступа
+    // https://stackoverflow.com/questions/75503513/codeigniter-4-shield-how-to-issue-an-access-token
 }

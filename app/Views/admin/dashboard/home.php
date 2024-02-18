@@ -1,14 +1,20 @@
 <?=$this->extend('admin/dashboard/layout'); ?>
 <?= $this->section('content'); ?>
     content...
+    <?php // $session = \Config\Services::session(); ?>
+    Welcome: <?php // $session->get('name'); ?>
+    <a href="<?php // base_url('logout') ?>">Logout</a>
     
     <br>
     <?= current_url(); ?><br>
     <?= base_url('admin'); ?>
     
-    <h2>Users</h2>
-    <?php
-    helper('html');
-    echo htmlTable($items,null,["border"=>1]);
+    <pre>
+    <h2>User:</h2>
+        <?php
+    // print_r($user);
+    print_r($entity);
+    // print_r($items);
     ?>
+    </pre>
 <?= $this->endSection(); ?>
