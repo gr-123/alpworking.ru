@@ -212,6 +212,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="<?= route_to('admin.image.upload'); ?>" class="nav-link <?= (current_url() == base_url('admin/image/upload')) ? 'active' : ''; ?>">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Upload
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

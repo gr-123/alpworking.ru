@@ -42,6 +42,12 @@ class AdminController extends BaseController
 		$data['pageTitle']='Profile';
 		return view('admin/dashboard/profile', $data);
     }
+
+    public function upload()
+    {
+		$data['pageTitle']='Upload';
+		return view('admin/dashboard/upload', $data);
+    }
     
     // войти в систему, используя свой адрес электронной почты и пароль
     public function loginAttempt()

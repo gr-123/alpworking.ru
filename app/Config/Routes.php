@@ -6,6 +6,7 @@
 use CodeIgniter\Router\RouteCollection;
 use App\Controllers\Admin\AdminController;
 use App\Controllers\Admin\UsersController;
+use App\Controllers\Admin\ImageController;
 use App\Controllers\Home;
 
 // https://codeigniter4.github.io/userguide/incoming/routing.html
@@ -59,6 +60,9 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
     // 
     $routes->get('/', [AdminController::class, 'index'], ['as' => 'admin.home']);
     $routes->get('profile', [AdminController::class, 'profile'], ['as' => 'admin.profile']);
+    // Upload
+    $routes->get('image/upload', [ImageController::class, 'index'], ['as' => 'admin.image.upload']);
+    $routes->post('image/upload', [ImageController::class, 'uploadImage'], ['as' => 'admin.image.upload']);
     // $routes->post('adduser', 'AdminController::adduser'); // /admin/adduser // $this->request->getPost()
     // $routes->match(["get", "post"], 'namemethod', 'AdminController::namemethod');
 
@@ -80,7 +84,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
 
 	// $routes->group('users', ['namespace' => 'App\Controllers\Admin', 'filter' => 'permission:admin.access'], function ($routes) {}
 	$routes->group('users', ['namespace' => 'App\Controllers\Admin'], function ($routes) { // admin/users/
-        $routes->get('/', 'UsersController::index');//, ['as' => 'admin.user.home']
+        $routes->get('/', [UsersController::class, 'index']);//, ['as' => 'admin.user.home']
         // $routes->get('list', 'UsersController::list');
         // $routes->delete('users/delete/(:segment)', 'UsersController::delete', ['filter' => 'admin-auth:dual,noreturn']); // ['dual', 'noreturn'] in $arguments filter’s before() and after()
 	});
