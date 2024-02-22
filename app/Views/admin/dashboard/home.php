@@ -1,4 +1,7 @@
 <?=$this->extend('admin/dashboard/layout'); ?>
+<?php // $this->section("title");?>
+<?php // $page_title;?>
+<?php // $this->endSection();?>
 <?= $this->section('content'); ?>
     content...
     <?php // $session = \Config\Services::session(); ?>

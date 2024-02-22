@@ -41,4 +41,37 @@ class Validation extends BaseConfig
     // --------------------------------------------------------------------
     // Rules
     // --------------------------------------------------------------------
+
+    // https://codeigniter.com/user_guide/libraries/validation.html#how-to-save-your-rules
+    
+    public array $signup = [
+        'username'     => 'required|max_length[30]',
+        // 'password'     => 'required|max_length[255]',
+        // 'pass_confirm' => 'required|max_length[255]|matches[password]',
+        // 'email'        => 'required|max_length[254]|valid_email',
+    ];
+
+    public array $signup_errors = [
+        'username' => [
+            'required' => 'You must choose a username.',
+        ],
+        // 'email' => [
+        //     'valid_email' => 'Please check the Email field. It does not appear to be valid.',
+        // ],
+    ];
+
+    // public array $signup = [
+    //     'username' => [
+    //         'rules'  => 'required|max_length[30]',
+    //         'errors' => [
+    //             'required' => 'You must choose a Username.',
+    //         ],
+    //     ],
+    //     'email' => [
+    //         'rules'  => 'required|max_length[254]|valid_email',
+    //         'errors' => [
+    //             'valid_email' => 'Please check the Email field. It does not appear to be valid.',
+    //         ],
+    //     ],
+    // ];
 }

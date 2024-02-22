@@ -62,7 +62,9 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
     $routes->get('profile', [AdminController::class, 'profile'], ['as' => 'admin.profile']);
     // Upload
     $routes->get('image/upload', [ImageController::class, 'index'], ['as' => 'admin.image.upload']);
+    // $routes->post('image/upload', [ImageController::class, 'index'], ['as' => 'admin.image.upload']);
     $routes->post('image/upload', [ImageController::class, 'uploadImage'], ['as' => 'admin.image.upload']);
+
     // $routes->post('adduser', 'AdminController::adduser'); // /admin/adduser // $this->request->getPost()
     // $routes->match(["get", "post"], 'namemethod', 'AdminController::namemethod');
 
