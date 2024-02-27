@@ -11,8 +11,8 @@ use Throwable;
 
 class ImageController extends BaseController
 {
-    private $upload_form = "admin/dashboard/upload";       // шаблон <filename>.php
-    private $upload_uri = "admin/image/upload";            // uri загрузки
+    private $upload_form = "admin/upload/upload_form";       // шаблон <filename>.php
+    private $success_upload = "admin/upload/success_upload";       // шаблон успешной загрузки файлов
     private $large = "assets/images/";     // каталог загрузки изображений
     // превью изображений
     private $thumbs = "assets/images/thumbnails/"; // каталог превью
@@ -31,6 +31,9 @@ class ImageController extends BaseController
      */
     public function __construct()
     {
+        // разделе «Использование модели CodeIgniter»
+        // https://codeigniter.com/user_guide/models/model.html
+
         $this->imageModel = new Image;
         // Вы можете получить правила проверки модели, обратившись к ее validationRules свойству:
         // $rules = $model->validationRules;
@@ -65,10 +68,14 @@ class ImageController extends BaseController
         // unset($_SESSION['some_name']); // or multiple values: unset($_SESSION['some_name'],$_SESSION['another_name']);
         // или
         // session()->remove('some_name'); // или массив ключей: $array_items = ['username', 'email']; session()->remove($array_items);
+        
+        // https://codeigniter.com/user_guide/outgoing/table.html
+        // $table = new \CodeIgniter\View\Table($template);
 
 		$data = [
 			'pageTitle' => "Upload - Загрузка нескольких файлов",
-            // 'all_images' => $this->imageModel->orderBy('created_at', 'asc')->findAll(),
+            // 'images' => $this->imageModel->orderBy('created_at', 'asc')->findAll(),
+            // 'images' => $this->imageModel->orderBy('id', 'DESC')->findAll(),
             'errors' => []
 		];
 
@@ -157,7 +164,11 @@ class ImageController extends BaseController
         }
         
         // для имен файлов, сохраненных в каталоге загрузки 
-        $save_images = [];
+        $save_images = array();
+        // $save_images = array(
+        //     'id' => [],
+        //     'name' => [],
+        // );
 
         foreach ($files['images'] as $file) { // echo '<pre>';print_r($files['images']);echo '</pre>';
             
@@ -284,10 +295,9 @@ class ImageController extends BaseController
             // Сохраняем данные файла в базе данных:
             // 
             $result = $this->imageModel->save($data);
+            $inserted_id = $this->imageModel->getInsertID();
             
-            if (!$result) {                
-                
-                session()->setFlashdata('failed', 'Failed! image not save.');
+            if (!$result) {      
                 session()->setFlashdata('errors', 'Errors! image not save.');
                 // Перенаправляем обратно, сохраняя информацию об ошибках:
                 return redirect()->back()->with('errors', 'tempmsg: Choose files to upload.');
@@ -304,9 +314,11 @@ class ImageController extends BaseController
             session()->setFlashdata('message', 'Uploaded successfully one file image!');
             log_message("info", $newName . " saved \$file in database.");
             
-            // Сохраняем в переменной массива для вывода превью на странице информации о загрузке:
-            array_push($save_images, $newName);
-        }
+            // Сохраняем для вывода превью
+            array_push($save_images, ['id' => $inserted_id, 'name' => $newName]);
+            // $save_images['id'][] = $inserted_id; // ID
+            // $save_images['name'][] = $newName;   // с именем (имена одинаковые с полными фотографиями)
+        }        
 
         session()->setFlashdata('success', 'Success! image uploaded.');
 		$data = [
@@ -319,6 +331,31 @@ class ImageController extends BaseController
         
         // return redirect()->to(site_url($this->upload_uri))->withInput()->with('previewImage', $filePreviewName);
         // return redirect()->back()->with('success', $filesUploaded . ' File/s uploaded successfully.'); ?
-        return view($this->upload_form, $data);
+        return view($this->success_upload, $data);
+    }
+
+    public function edit($id = null)
+    {
+     $data['user'] = $this->imageModel->where('id', $id)->first();
+     return view('admin/image/edit', $data);
+    }
+
+    public function update()
+    {  
+        $id = $this->request->getVar('id');
+        $data = [
+            'name' => $this->request->getVar('name'),
+            'email'  => $this->request->getVar('email'),
+            ];
+        $save = $this->imageModel->update($id,$data);
+        return redirect()->to( base_url('public/index.php/users') );
+    }
+
+    public function delete($id = null)
+    {
+        $this->imageModel->where('id', $id)->delete();
+        // $data['user'] = $this->imageModel->where('id', $id)->delete();
+        // return redirect()->to( base_url('public/index.php/users') );
+        return redirect()->back()->with('success', $id . ' File/s deleted successfully.');
     }
 }
