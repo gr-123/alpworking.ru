@@ -1,117 +1,77 @@
 <?=$this->extend('admin/dashboard/layout'); ?>
 <?= $this->section('content'); ?>
+<?php //echo $this->include('sidebar')
+// CodeIgniter\View\View второй параметр — массив опций, не массив данных:
+/**
+ * Used within layout views to include additional views.
+ *
+ * @param string     $view
+ * @param array|null $options
+ * @param null       $saveData
+ *
+ * @return string
+ */
+// public function include(string $view, array $options = null, $saveData = true): string
+// {
+//     return $this->render($view, $options, $saveData);
+// }
+?>
     <?= current_url(); ?><br>
     <?= base_url('admin/image/upload'); ?>
+    app/Config/Validation.php: // 'max_size[images,2048]', 'max_dims[images,1024,768]',
 
-    <div class="container py-4">
-      <?php $validation =  \Config\Services::validation(); ?>
+<?php $validation =  \Config\Services::validation(); ?>
+<div class="container py-4">
+    <hr>
+    <div class="clear-fix py-2"></div>
         <div class="row">
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 m-auto">
 
 <?php 
-    // if(session()->has('message')) { session()->getFlashdata('message'); } ?>
-<?php // File preview
-// if(session()->has('filename')){ ?>
-<?php //if(session()->getFlashdata('extension') == 'jpg' || session()->getFlashdata('extension') == 'jpeg'){ ?>
-    <img src="<?php //session()->getFlashdata('filename') ?>" with="200px" height="200px"><br>
-<?php // }else{ ?>
-    <!-- <a href="<?php //session()->getFlashdata('filename') ?>">Click Here..</a> -->
-<?php //} } ?>
+// функция вернет любые сообщения об ошибках, отправленные валидатором, хранящиеся в сеансе.
+// print_r(validation_errors());
+// print_r(validation_list_errors());
+// <ul>
+// foreach (session()->getFlashdata('failed') as $key => $var)
+//     <li>echo esc($var)</li>
+// endforeach
+// </ul>
 
-<?php if(session()->has("message")){ echo session("message"); } // проверяем, существует ли ключ сообщения или нет.?>
+// Чтобы сохранить ошибки проверки в сеансе, вам необходимо использовать redirect() with withInput():
+// if (! $this->validateData($data, $rules)) {
+//     return redirect()->back()->withInput();
+// }
 
-<?php 
-// $name = $_SESSION['name'];// or: 
-// $name = $session->name; // or: 
-// $name = $session->get('name'); // Метод get()возвращает значение null, если элемент, к которому вы пытаетесь получить доступ, не существует. Или даже через вспомогательный метод сеанса:
-// $name = session('name');
-// Если вы хотите получить все существующие данные сеанса
-// $userData = $_SESSION; // or:
-// $userData = $session->get();
-// Важный
-// Метод get()БУДЕТ возвращать элементы flashdata или tempdata при получении одного элемента по ключу. Однако он не будет возвращать флэш-данные или временные данные при получении всех данных из сеанса.
-
-// убедиться, что значение сеанса существует
-// if (isset($_SESSION['some_name'])) { // ... } // Или 
-// $session->has('some_name');
-
-
-                    // $session->set($data); // или по одному значению за раз: $session->set('some_name', 'some_value');
-                    // $session->push('hobbies', ['sport' => 'tennis']); // добавить в массив новое значение
-                    // Flashdata: 
-                    // доступны только для следующего запроса, а затем автоматически удаляются
-                    // метод getFlashdata(): если вы хотите быть уверены, что читаете «флэш-данные» (а не какие-либо другие)
-                    // $session->getFlashdata('item'); // null, если элемент не найден
-                    // $session->getFlashdata(); // массив со всеми флэш-данными
- ?>
-
-<?php session()->getFlashdata() ?>
-<!-- Эта функция вернет любые сообщения об ошибках, отправленные валидатором. 
-Если сообщений нет, возвращается пустая строка. -->
-<?= validation_list_errors() ?>
-<!-- PHP ничего не разделяет между запросами. Поэтому при перенаправлении в случае сбоя проверки в перенаправленном 
-запросе не будет ошибок проверки, поскольку проверка выполнялась в предыдущем запросе.
-
-В этом случае вам нужно использовать вспомогательную функцию формы validation_errors()
-и validation_list_errors(). validation_show_error()
-Эти функции проверяют ошибки проверки, хранящиеся в сеансе.
-
-Чтобы сохранить ошибки проверки в сеансе, вам необходимо использовать redirect() with withInput():
-// In Controller.
-if (! $this->validateData($data, $rules)) {
-    return redirect()->back()->withInput();
-}
-
-Настройка отображения ошибок
-https://codeigniter.com/user_guide/libraries/validation.html#customizing-error-display
-
--->
-<!-- 
-    Новое в версии 4.3.0.
-    https://codeigniter4.github.io/userguide/helpers/form_helper.html#validation_errors
-
-    <?php //$errors = validation_errors(); // validation_list_errors() // validation_show_error('username')
-// не работает с проверкой в ​​модели . Если вы хотите получить ошибки проверки 
-// при проверке модели           https://codeigniter4.github.io/userguide/models/model.html#in-model-validation 
-// см. Получение ошибок проверки https://codeigniter4.github.io/userguide/models/model.html#model-getting-validation-errors
-
+// Flashdata: 
+// доступны только для следующего запроса, а затем автоматически удаляются
+if(session()->has('message')) { echo esc(session()->getFlashdata('message')); }
 ?>
--->
-<!-- Настройка отображения ошибок https://codeigniter.com/user_guide/libraries/validation.html#customizing-error-display -->
-<?php if (isset($error)) : ?>
-            <?php foreach ($errors as $error): ?>
-                <li><?= esc($error) ?></li>
-            <?php endforeach ?>
+
+<?php if(session()->getFlashdata('success')) : ?>
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
+    <b><?php echo esc(session()->getFlashdata('success')) ?></b>
+</div>
+<?php elseif(session()->getFlashdata('failed')) : ?>
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
+    <?php echo esc(session()->getFlashdata('failed')) ?>
+</div>
+<?php elseif(! empty($errors)) : ?>
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
+    <!-- if (isset($errors) && ! empty($errors) && is_array($errors) && $errors !==FALSE) :  -->
+    <?php if ( ! empty($errors)) { foreach ($errors as $error) { ?><li><?= esc($error) ?></li><?php } ?><?php } ?>
+</div>
 <?php endif; ?>
 
-<!-- https://codeigniter.com/user_guide/helpers/form_helper.html#form_open -->
-<!-- https://codeigniter4.github.io/userguide/helpers/form_helper.html#form_open_multipart -->
+<?php $class_err = ''; if($validation->getError('images')) { $class_err = ' is-invalid'; }; ?>
+
+
+
+<!-- Open Form: -->
 <?= form_open_multipart(base_url('admin/image/upload')) ?>
 <?= csrf_field() ?>
-
-<!-- display flash data message -->
-<?php
-    if(session()->getFlashdata('success')):?>
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
-            <b><?php echo session()->getFlashdata('success') ?></b>
-        </div>
-    <?php elseif(session()->getFlashdata('failed')):?>
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
-            <?php echo session()->getFlashdata('failed') ?>
-            <ul>
-            <?php foreach (session()->getFlashdata('failed')  as $field => $error) : ?>
-                <li><?= $error ?></li>
-            <?php endforeach ?>
-            </ul>
-        </div>
-<?php endif; ?>
-
-
-
-<?php $class_err = ''; ?>
-<?php if($validation->getError('images')) { $class_err = ' is-invalid'; }; ?>
 
 <div class="card shadow">
     <div class="card-header">
@@ -122,6 +82,7 @@ https://codeigniter.com/user_guide/libraries/validation.html#customizing-error-d
         <div class="form-group mb-3 has-validation">
 
             <?php
+            // Label:
             echo form_label('Images', '', ['class' => 'form-label',]);
             $attributes = [
                 'name' => 'images[]',
@@ -129,6 +90,7 @@ https://codeigniter.com/user_guide/libraries/validation.html#customizing-error-d
                 'multiple' => 'multiple',
                 'class' => 'form-control' . $class_err,
             ];
+            // Input upload:
             echo form_upload($attributes); 
             ?>
     
@@ -137,10 +99,12 @@ https://codeigniter.com/user_guide/libraries/validation.html#customizing-error-d
                     <?= $validation->getError('images') ?>
                 </div>                                
             <?php endif; ?>
+
         </div>
     </div>
 
     <div class="card-footer">
+
         <?php
         $data = [
             'name'    => 'images_upload',
@@ -148,45 +112,73 @@ https://codeigniter.com/user_guide/libraries/validation.html#customizing-error-d
             'value'   => 'Upload Images',
             'type'    => 'submit',
             'class'   => 'btn btn-primary',
-            'content' => 'Upload',
+            'content' => 'Загрузить',
         ];
+        // Button submit:
         echo form_button($data);
         ?>
+        
     </div>
 </div>
-<?php echo form_close(); ?>
 
-<?php if(session()->getFlashdata('previewImage')):?>
-    <div class="form-group py-4">
-    <h5 class="py-2">Image Preview</h5>
-        <?php foreach(session()->getFlashdata('previewImage') as $image): ?>
-            <img src="<?php echo base_url('assets/images/thumbnails/'.$image);?>" class="img-fluid" height="150px"/><br/><br/>
-        <?php endforeach; ?>
+<?php 
+// Close Form:
+echo form_close(); ?>
+
+</div>
+
+<div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+<div class="card rounded-0 shadow">
+<div class="card-header">
+    <div class="card-title h4 mb-0 fw-bolder">Uploaded Files</div>
+</div>
+<div class="card-body">
+    <div class="container-fluid">
+        <table class="table table-striped table-bordered">
+            <colgroup>
+                <col width="10%">
+                <col width="20%">
+                <col width="50%">
+                <col width="20%">
+            </colgroup>
+            <thead>
+                <tr class="bg-primary bg-gradient text-light">
+                    <th class="p-1 text-center">№</th>
+                    <th class="p-1 text-center">img</th>
+                    <th class="p-1 text-center">name</th>
+                    <th class="p-1 text-center"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if(isset($images) && ! empty($images)): ?>
+                <?php 
+                $i = 1;
+                foreach($images as $img):
+                ?>
+                <tr>
+                    <td class="px-2 py-1 align-middle text-center"><?= number_format($i++) ?></td>
+                    <td class="px-2 py-1 align-middle"><img src="<?php echo base_url($thumbs . '/' . $img);?>" class="img-fluid" height="150px"/></td>
+                    <td class="px-2 py-1 align-middle"><p class="m-0 text-truncate" title="<?= $img ?>"><?= $img ?></p></td>
+                    <td class="px-2 py-1 align-middle text-center">
+                        <a href="<?= $thumbs . '/' . $img ?>" class="text-muted text-decoration-none mx-2" target="_blank" title="View File"><i class="fa fa-external-link"></i></a>
+                        <a href="<?= base_url($thumbs . '/' . $img) ?>" class="text-primary fw-bolder text-decoration-none mx-2" target="_blank" title="Download File" download="<?= $img ?>"><i class="fa fa-download"></i></a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php endif; ?>
+                <?php if(!isset($images) || (isset($images) && count($images) <= 0)): ?>
+                    <tr>
+                        <th colspan="4" class="p-1 text-center">No records found</th>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
-
-    <table class="table table-bordered mt-3">
-        <thead>
-            <tr>
-                <th>Filename</th>
-                <th>Filepath</th>
-                <th>File Type</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach (session()->getFlashdata('previewImage') as $fileUpload):?>
-            <tr>
-                <td><?= $fileUpload->imagename ?></td>
-                <td>filepath...</td>
-                <td>type...</td>
-            </tr>
-            <?php endforeach;?>
-        </tbody>
-    </table>
-<?php endif; ?>
-
-            </div>
-        </div>
-    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
        
 <!-- как получить горизонтальные продукты в Ci4, сэр, 😶я хочу отображать их в динамической сетке на главной странице?
@@ -200,4 +192,7 @@ https://codeigniter.com/user_guide/libraries/validation.html#customizing-error-d
    /
 /
  -->
+    <?= $this->section('javascript') ?>
+       <!-- let a = 'a'; -->
+    <?= $this->endSection() ?>
 <?= $this->endSection(); ?>

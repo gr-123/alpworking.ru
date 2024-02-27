@@ -84,7 +84,7 @@ class Validation extends BaseConfig
             // 'max_size[images,2048]',
             // 'max_dims[images,1024,768]',
             'mime_in[images,image/jpg,image/jpeg,image/png,image/gif,image/webp]',
-            // ext_in[images,jpg,jpeg,png,gif,webp]
+            'ext_in[images,jpg,jpeg,png,gif,webp]',
             'is_image[images]',
         ],
     ];

@@ -13,9 +13,9 @@ class ImageController extends BaseController
 {
     private $upload_form = "admin/dashboard/upload";       // шаблон <filename>.php
     private $upload_uri = "admin/image/upload";            // uri загрузки
-    private $large = FCPATH . "assets/images";     // каталог загрузки изображений
+    private $large = "assets/images/";     // каталог загрузки изображений
     // превью изображений
-    private $thumbs = FCPATH . "assets/images/thumbnails"; // каталог превью
+    private $thumbs = "assets/images/thumbnails/"; // каталог превью
     private $w_thumb = 240;                                // ширина
     private $h_thumb = 180;                                // высота
     
@@ -32,6 +32,13 @@ class ImageController extends BaseController
     public function __construct()
     {
         $this->imageModel = new Image;
+        // Вы можете получить правила проверки модели, обратившись к ее validationRules свойству:
+        // $rules = $model->validationRules;
+        // // Вы также можете получить только подмножество этих правил
+        // // get the rules for all but the "username" field
+        // $rules = $model->getValidationRules(['except' => ['username']]);
+        // // get the rules for only the "city" and "state" fields
+        // $rules = $model->getValidationRules(['only' => ['city', 'state']]);
     }
 
     /**
@@ -46,10 +53,10 @@ class ImageController extends BaseController
         // if($this->session->userdata('error_msg')){ $data['error_msg'] = $this->session->userdata('error_msg'); $this->session->unset_userdata('error_msg'); }
         // 
         // закрыть текущий сеанс вручную после того, как он вам больше не понадобится
-        // $session->close();
+        // session()->close();
         // точно так же, как функция PHP session_write_close()
         // очистить текущий сеанс (например, при выходе из системы)
-        // $session->destroy();
+        // session()->destroy();
         // точно так же, как функция PHP session_destroy()
         // Это должна быть последняя операция, связанная с сеансом, которую вы выполняете во время того же запроса. Все данные сеанса (включая флэш-данные и временные данные) будут безвозвратно уничтожены.
         //   Примечание
@@ -57,7 +64,7 @@ class ImageController extends BaseController
         // Удаление данных сеанса
         // unset($_SESSION['some_name']); // or multiple values: unset($_SESSION['some_name'],$_SESSION['another_name']);
         // или
-        // $session->remove('some_name'); // или массив ключей: $array_items = ['username', 'email']; $session->remove($array_items);
+        // session()->remove('some_name'); // или массив ключей: $array_items = ['username', 'email']; session()->remove($array_items);
 
 		$data = [
 			'pageTitle' => "Upload - Загрузка нескольких файлов",
@@ -66,6 +73,7 @@ class ImageController extends BaseController
 		];
 
 		return view($this->upload_form, $data);
+        // return view('blog_view', $data, ['saveData' => false]); // чтобы функция view() по умолчанию очищала данные между вызовами
     }
     
     /**
@@ -74,9 +82,7 @@ class ImageController extends BaseController
      * @return void
      */
     public function uploadImage()
-    {return redirect()->back()->with('errors', 'tempmsg: Choose files to upload.');
-        // Учебное пособие по проверке формы: https://codeigniter.com/user_guide/libraries/validation.html#form-validation-tutorial
-        
+    {
         // echo '<pre>';print_r($this->request->getPost());echo '</pre>';
         // echo '<pre>';print_r($this->request->getFileMultiple('images'));echo '</pre>';
         // echo '<pre>';print_r($this->request->getFiles());echo '</pre>';
@@ -170,31 +176,31 @@ class ImageController extends BaseController
 
             // https://codeigniter4.github.io/userguide/helpers/filesystem_helper.html
             // 
-            // get_file_info                            //name, size, date, readable, writeable, executable and fileperms.
+            // get_file_info                            // name, size, date, readable, writeable, executable and fileperms.
             // symbolic_permissions                     // -rw-r--r--
             // octal_permissions                        // 644
 
             // SplFileInfo:
             // echo $file->getBasename();
-            // echo $file->getMTime();                  // Get last modified time
             // echo $file->getRealPath();
+            // echo $file->getMTime();                  // Get last modified time
             // echo $file->getPerms();                  // Get the file permissions
-            // $newName = $file->getRandomName();       // Generates something like: 1465965676_385e33f741.jpg
-            // $size = $file->getSize();                // 256901
+            // echo $file->getMimeType();               // image/png
+            // echo $file->guessExtension();            // Returns 'jpg' (WITHOUT the period)
+            // $newName   = $file->getRandomName();     // Generates something like: 1465965676_385e33f741.jpg
+            // $size      = $file->getSize();           // 256901
             // $bytes     = $file->getSizeByUnit();     // 256901
             // $kilobytes = $file->getSizeByUnit('kb'); // 250.880
             // $megabytes = $file->getSizeByUnit('mb'); // 0.245
-            // echo $file->getMimeType();               // image/png
-            // echo $file->guessExtension();            // Returns 'jpg' (WITHOUT the period)
 
-            // $name = $file->getName();               // исходное имя файла, предоставленное клиентом
-            // $originalName = $file->getClientName(); // исходное имя загруженного файла, отправленное клиентом, даже если файл был перемещен
-            // $tempfile = $file->getTempName();       // полный путь к временному файлу, созданному во время загрузки
-            // $ext = $file->getClientExtension();     // исходное расширение файла на основе имени загруженного файла
-                                                       // Предупреждение
-                                                       // Это НЕ надежный источник. Вместо этого используйте надежную версию guessExtension().
-            // $type = $file->getClientMimeType();     // MIME-тип файла, предоставленный клиентом. Это НЕ доверенное значение. Вместо этого используйте getMimeType()
-            // $clientPath = $file->getClientPath();   // относительный путь к загруженному файлу, когда клиент загрузил файлы через загрузку каталога.
+            // $name         = $file->getName();            // исходное имя файла, предоставленное клиентом
+            // $originalName = $file->getClientName();      // исходное имя загруженного файла, отправленное клиентом, даже если файл был перемещен
+            // $tempfile     = $file->getTempName();        // полный путь к временному файлу, созданному во время загрузки
+            // $ext          = $file->getClientExtension(); // исходное расширение файла на основе имени загруженного файла
+                                                            // Предупреждение
+                                                            // Это НЕ надежный источник. Вместо этого используйте надежную версию guessExtension().
+            // $type         = $file->getClientMimeType();  // MIME-тип файла, предоставленный клиентом. Это НЕ доверенное значение. Вместо этого используйте getMimeType()
+            // $clientPath   = $file->getClientPath();      // относительный путь к загруженному файлу, когда клиент загрузил файлы через загрузку каталога.
             
             $newName = $file->getRandomName();
             $filePath = $file->getClientPath();
@@ -206,9 +212,33 @@ class ImageController extends BaseController
                 // Методы обработки возвращают экземпляр класса
                 $image->withFile($file)
                     ->resize($this->w_thumb, $this->h_thumb, true, 'height')
-                    ->save($this->thumbs . $newName, 10);
+                    ->save(FCPATH . $this->thumbs . $newName, 10);
+                    // ->save($uploadedImages . $newName, 10);
             } catch (ImageException $e) {// CodeIgniter\Images\ImageException
-                echo $e->getMessage();
+                echo "Image->resize():<br>" . $e->getMessage();
+
+                // helper 'filesystem':
+                // $directory = WRITEPATH . 'uploads/qwe/';
+                // echo "<pre>";
+                // print_r(directory_map(FCPATH . 'assets/images/', 0, true)); //карта каталога                 
+                // echo octal_permissions(fileperms('assets/images')), symbolic_permissions(fileperms('assets/images')); // 750 drwxr-x---
+                // echo set_realpath('./');  // /var/www/alpworking.ru/public/
+                // print_r(get_filenames(WRITEPATH . 'uploads/'));            //массив, содержащий имена всех файлов
+                // print_r(get_dir_file_info (WRITEPATH . 'uploads/', false));//массив, содержащий имена имена файлов, размер файла, даты и разрешения
+                // print_r(get_file_info  (WRITEPATH . 'uploads/', false));   //атрибуты имени , пути , размера и даты изменения для файла
+
+                // Созд.папку,затем удалить
+                // if (!file_exists($directory)) { mkdir($directory, 0755); }
+                // if (! write_file($directory . 'file.php', 'Some file data')) { echo 'Unable to write the file'; } else { echo 'File written!'; }
+                // Рекурсивно копирует файлы и каталоги исходного каталога в целевой каталог
+                // try {
+                //     directory_mirror($directory, WRITEPATH . 'uploads'); // поведение перезаписи с помощью третьего параметра
+                // } catch (\Throwable $e) {
+                //     echo 'Failed to export uploads!';
+                // }
+
+                // delete_files($directory, true, false, 1); // delete all files/folders
+                // rmdir($directory);                        // delete folder
             } 
 
             // 
@@ -219,7 +249,7 @@ class ImageController extends BaseController
             // Метод move() возвращает новый экземпляр File для перемещенного файла, поэтому вам 
             // необходимо зафиксировать результат, если полученное местоположение необходимо:
             try {
-                $file = $file->move($this->large, $newName, true); // true - перезаписать существующий файл
+                $file = $file->move(FCPATH . $this->large, $newName, true); // true - перезаписать существующий файл
             } catch (Throwable $e) {
                 $e->getMessage();
                 return;
@@ -227,6 +257,7 @@ class ImageController extends BaseController
 
             log_message("info", $newName . " saved (move) to public upload folder. \n" . $file . " saved \$file");
 
+            // Возможно также перемещение файлов методом store():
             // Store Files
             // Каждый файл можно переместить в новое место с помощью store() метода
             // По умолчанию файлы загрузки сохраняются в каталоге , доступном для записи/загрузках . Будет создана папка ГГГГММДД и случайное имя файла . Возвращает путь к файлу:
@@ -253,42 +284,41 @@ class ImageController extends BaseController
             // Сохраняем данные файла в базе данных:
             // 
             $result = $this->imageModel->save($data);
-
+            
             if (!$result) {                
-                // $session = \Config\Services::session();
-                // $session->setFlashdata('failed', 'Failed! image not uploaded.');
+                
+                session()->setFlashdata('failed', 'Failed! image not save.');
+                session()->setFlashdata('errors', 'Errors! image not save.');
+                // Перенаправляем обратно, сохраняя информацию об ошибках:
+                return redirect()->back()->with('errors', 'tempmsg: Choose files to upload.');
                 // https://codeigniter.com/user_guide/outgoing/response.html
                 // return redirect()->to(site_url($this->upload_uri))->withInput()->with('previewImage', $newName);
                 // return redirect()->to(site_url($this->upload_uri))->withInput();
 
-                // Перенаправляем обратно, сохраняя информацию об ошибках:
-                return redirect()->back()->with('errors', 'tempmsg: Choose files to upload.');
-
-                // if ($is_file_error) { if ($file_data) {
-                //         $file = './upload/' . $file_data['file_name'];
-                //         if (file_exists($file)) {unlink($file);}
-                //         $thumb = $thumb_path . $file_data['file_name'];
-                //         if ($thumb) {unlink($thumb);}
-                //         ...
+                // todo:
+                // if ($is_file_error) { if ($file_data) { $file = './upload/' . $file_data['file_name']; if (file_exists($file)) {
+                    // unlink($file);} $thumb = $thumb_path . $file_data['file_name']; if ($thumb) {
+                        // unlink($thumb);} ...
             }
             
+            session()->setFlashdata('message', 'Uploaded successfully one file image!');
             log_message("info", $newName . " saved \$file in database.");
-            // $session->setFlashdata('message', 'Uploaded successfully one file image!');
-            // 
+            
             // Сохраняем в переменной массива для вывода превью на странице информации о загрузке:
             array_push($save_images, $newName);
         }
 
+        session()->setFlashdata('success', 'Success! image uploaded.');
 		$data = [
             'images' => $save_images,
+            'thumbs' => $this->thumbs,
             'success' => "Фотографии загружены! All Files Uploaded Successfully<p>Try it again!</p><h3>Your form was successfully submitted!</h3>"
 		];
 
         $save_images = []; // очищаем названия сохраненных файлов
         
-        // $session->setFlashdata('success', 'Success! image uploaded.');
         // return redirect()->to(site_url($this->upload_uri))->withInput()->with('previewImage', $filePreviewName);
-        // // return redirect()->back()->with('success', $filesUploaded . ' File/s uploaded successfully.'); ?
+        // return redirect()->back()->with('success', $filesUploaded . ' File/s uploaded successfully.'); ?
         return view($this->upload_form, $data);
     }
 }
