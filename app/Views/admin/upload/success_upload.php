@@ -55,19 +55,20 @@
                   foreach ($images as $img) : ?>
                     <tr>
                       <td class="px-2 py-1 align-middle text-center"><?= number_format($i++) ?></td>
-                      <td class="px-2 py-1 align-middle"><?php echo $img['id']; ?></td>
-                      <td class="px-2 py-1 align-middle"><img src="<?php echo base_url($thumbs . '/' . $img['name']); ?>" class="img-fluid" height="150px" /></td>
+                      <td class="px-2 py-1 align-middle"><?= esc($img['id'], 'html') ?></td>
+                      <td class="px-2 py-1 align-middle"><img src="<?= esc(base_url($thumbs . '/' . $img['name']), 'attr') ?>" class="img-fluid" height="150px" /></td>
                       <td class="px-2 py-1 align-middle">
-                        <p class="m-0 text-truncate" title="<?= $img['name'] ?>"><?= $img['name'] ?></p>
+                        <p class="m-0 text-truncate" title="<?= esc($img['name'], 'attr') ?>"><?= esc($img['name'], 'html') ?></p>
                       </td>
                       <td class="px-2 py-1 align-middle">
                         <p class="m-0 text-truncate" title="<?= $img['name'] ?>">
-                          <a href="<?php echo base_url('admin/image/edit/' . $img['id']); ?>" class="btn btn-success">Edit</a>
-                          <a href="<?php echo base_url('admin/image/delete/' . $img['id']); ?>" class="btn btn-danger">Delete</a>
+                          <a href="<?= esc(base_url('admin/image/edit/' . $img['id']), 'url') ?>" class="btn btn-success">Edit</a>
+                          <a href="<?= esc(base_url('admin/image/delete/' . $img['id']), 'url') ?>" class="btn btn-danger">Delete</a>
                         </p>
                       </td>
                       <td class="px-2 py-1 align-middle text-center">
-                        <a href="<?= base_url($thumbs . '/' . $img['name']) ?>" class="text-primary fw-bolder text-decoration-none mx-2" target="_blank" title="Download File" download="<?= $thumbs . '/' . $img['name'] ?>">
+                        <!-- https://codeigniter.com/user_guide/outgoing/response.html#force-file-download -->
+                        <a href="<?= esc(base_url($thumbs . '/' . $img['name']), 'url') ?>" class="text-primary fw-bolder text-decoration-none mx-2" target="_blank" title="Download File" download="<?= esc($thumbs . '/' . $img['name'], 'attr') ?>">
                           <i class="fa fa-download"></i>
                         </a>
                       </td>
@@ -89,6 +90,29 @@
   </div>
 </div>
 
+<div class="form-group col-md-6">
+  <label for="formGroupExampleInput">Name</label>
+  <input type="file" name="file" class="form-control" id="file" onchange="readURL(this);" accept=".png, .jpg, .jpeg" />
+</div>           
+<div class="form-group col-md-6">
+  <img id="blah" src="#" class="" width="200" height="150"/>
+</div> 
+<script>
+  function readURL(input, id) {
+    id = id || '#blah';
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $(id)
+                    .attr('src', e.target.result)
+                    .width(200)
+                    .height(150);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+ }
+</script> 
 
 
 <!-- https://www.w3schools.com/jsref/met_win_open.asp

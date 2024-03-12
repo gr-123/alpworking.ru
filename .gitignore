@@ -71,6 +71,11 @@ php_errors.log
 public/assets/images/*
 
 #-------------------------
+# Временные файлы
+#-------------------------
+tmp/*
+
+#-------------------------
 # User Guide Temp Files
 #-------------------------
 user_guide_src/build/*

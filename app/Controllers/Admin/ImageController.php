@@ -2,12 +2,67 @@
 
 namespace App\Controllers\Admin;
 
+use Throwable;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Images\Exceptions\ImageException;
+
 use App\Controllers\BaseController;
 use CodeIgniter\Files\File;
 use CodeIgniter\HTTP\Files\UploadedFile;
 use App\Models\Image;
-use Throwable;
+
+
+
+// 2015 Simple Image Gallery CRUD with CodeIgniter 3 https://the-amazing-php.blogspot.com/2015/05/codeigniter-image-gallery-crud.html
+// ResourcePresenter   https://codeigniter.com/user_guide/incoming/restful.html#resourcepresenter
+// Using CodeIgniter’s Model   https://codeigniter.com/user_guide/models/model.html
+// return redirect()->to('admin/home'); // URI (относительно baseURL)   https://codeigniter.com/user_guide/outgoing/response.html#redirect
+// return redirect()->route('user_gallery'); // Go to a named route. "user_gallery" is the route name, not a URI path. ( обратная маршрутизация )
+// return redirect()->back()->withInput();// Keep the old input values upon redirect so they can be used by the `old()` function.
+// return redirect()->back()->with('foo', 'message');// Set a flash message.
+// return redirect()->to('admin/home', 301);// Redirect to a URI path relative to baseURL with status code 301.
+// return redirect()->route('user_gallery', [], 308);// Redirect to a route with status code 308.
+// return redirect()->back(302);// Redirect back with status code 302.
+// 303 используется для запросов POST/PUT/DELETE, а 307 — для всех остальных запросов. «Перенаправления в HTTP»: https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections
+
+
+
+                    // use CodeIgniter\Files\File;
+                    // use CodeIgniter\Images\Exceptions\ImageException;
+                    // class Image extends File
+                        // /**
+                        //  * Makes a copy of itself to the new location. If no filename is provided
+                        //  * it will use the existing filename.
+                        //  *
+                        //  * @param string      $targetPath The directory to store the file in
+                        //  * @param string|null $targetName The new name of the copied file.
+                        //  * @param int         $perms      File permissions to be applied after copy.
+                        //  */
+                        // public function copy(string $targetPath, ?string $targetName = null, int $perms = 0644): bool
+                        // {
+                        //     $targetPath = rtrim($targetPath, '/ ') . '/';
+
+                        //     $targetName ??= $this->getFilename();
+
+                        //     if (empty($targetName)) {
+                        //         throw ImageException::forInvalidFile($targetName);
+                        //     }
+
+                        //     if (! is_dir($targetPath)) {
+                        //         mkdir($targetPath, 0755, true);
+                        //     }
+
+                        //     if (! copy($this->getPathname(), "{$targetPath}{$targetName}")) {
+                        //         throw ImageException::forCopyError($targetPath);
+                        //     }
+
+                        //     chmod("{$targetPath}/{$targetName}", $perms);
+
+                        //     return true;
+                        // }
+                        
+                        // \alpfreelance - swarm\app\application\upload\FileController.php
+                        // C:\Users\n1\OneDrive\PHP\CI\5. Images upload.s
 
 class ImageController extends BaseController
 {
@@ -69,8 +124,15 @@ class ImageController extends BaseController
         // или
         // session()->remove('some_name'); // или массив ключей: $array_items = ['username', 'email']; session()->remove($array_items);
         
+        // Краткое руководство по базе данных
+        // --------------------------------------------------------------------
+        // https://codeigniter.com/user_guide/database/examples.html
+        // $query = $db->query('SELECT * FROM my_table');//$db = \Config\Database::connect();
+        // $query = $this->imageModel->query('SELECT * FROM my_table');
+
         // https://codeigniter.com/user_guide/outgoing/table.html
         // $table = new \CodeIgniter\View\Table($template);
+        // echo $table->generate($query);
 
 		$data = [
 			'pageTitle' => "Upload - Загрузка нескольких файлов",
@@ -78,6 +140,11 @@ class ImageController extends BaseController
             // 'images' => $this->imageModel->orderBy('id', 'DESC')->findAll(),
             'errors' => []
 		];
+
+        if (! is_file(APPPATH . 'Views/' . $this->upload_form . '.php')) {
+        // if (! is_file(APPPATH . 'Views/pages/' . $page . '.php')) {
+            throw new PageNotFoundException($this->upload_form);
+        }
 
 		return view($this->upload_form, $data);
         // return view('blog_view', $data, ['saveData' => false]); // чтобы функция view() по умолчанию очищала данные между вызовами
@@ -286,9 +353,9 @@ class ImageController extends BaseController
             // return view('upload_success', $data);
             
             $data = [
-                'image_name' =>  $newName,
-                'image_path' =>  $filePath,
-                'image_type' =>  $fileType,
+                'name' =>  $newName,
+                'path' =>  $filePath,
+                'type' =>  $fileType,
             ];
 
             // 
@@ -314,10 +381,8 @@ class ImageController extends BaseController
             session()->setFlashdata('message', 'Uploaded successfully one file image!');
             log_message("info", $newName . " saved \$file in database.");
             
-            // Сохраняем для вывода превью
+            // Сохраняем в ассоциативный массив для дальнейшего вывода превью при показе страницы
             array_push($save_images, ['id' => $inserted_id, 'name' => $newName]);
-            // $save_images['id'][] = $inserted_id; // ID
-            // $save_images['name'][] = $newName;   // с именем (имена одинаковые с полными фотографиями)
         }        
 
         session()->setFlashdata('success', 'Success! image uploaded.');

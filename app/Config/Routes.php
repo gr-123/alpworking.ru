@@ -93,6 +93,28 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
 	});
 });
 
+// $routes->resource('products', ['controller' => 'ProductController', 'websafe' => 1]);
+// GET    | products               | »   \App\Controllers\Products::index    
+// GET    | products/new           | »   \App\Controllers\Products::new      
+// GET    | products/(.*)/edit     | »   \App\Controllers\Products::edit/$1  
+// GET    | products/(.*)          | »   \App\Controllers\Products::show/$1  
+// POST   | products               | »   \App\Controllers\Products::create   
+// PATCH  | products/(.*)          | »   \App\Controllers\Products::update/$1
+// PUT    | products/(.*)          | »   \App\Controllers\Products::update/$1
+// DELETE | products/(.*)          | »   \App\Controllers\Products::delete/$1
+
+$routes->presenter('products', ['controller' => 'ProductController', 'websafe' => 1]);
+// GET    | products               | »   \App\Controllers\ProductController::index    
+// GET    | products/show/(.*)     | »   \App\Controllers\ProductController::show/$1  
+// GET    | products/new           | »   \App\Controllers\ProductController::new      
+// GET    | products/edit/(.*)     | »   \App\Controllers\ProductController::edit/$1  
+// GET    | products/remove/(.*)   | »   \App\Controllers\ProductController::remove/$1
+// GET    | products/(.*)          | »   \App\Controllers\ProductController::show/$1  
+// POST   | products/create        | »   \App\Controllers\ProductController::create   
+// POST   | products/update/(.*)   | »   \App\Controllers\ProductController::update/$1
+// POST   | products/delete/(.*)   | »   \App\Controllers\ProductController::delete/$1
+// POST   | products               | »   \App\Controllers\ProductController::create
+
 // The route is defined as:
 $routes->get('users/(:num)/gallery/(:num)', 'Galleries::showUserGallery/$1/$2', ['as' => 'user_gallery']); 
 // <a href="<?= url_to('user_gallery', 15, 12) вопр.>">View Gallery</a> Result: 'http://example.com/users/15/gallery/12'
