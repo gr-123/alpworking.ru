@@ -3,6 +3,14 @@
 
 <h2><?= esc($title) ?></h2>
 
+<?php 
+// при перенаправлении из метода  delete() 
+// return redirect()->to('/products')->withInput()->with('success', "product '$id' deleted.");
+?>
+<?php if (session()->has('success') && ! empty(session()->getFlashdata('success'))): ?>
+    <h2> <?=esc(session()->getFlashdata('success')) ?> </h2>
+<?php endif ?>
+
 <?php if (! empty($products) && is_array($products)): ?>
 
     <?php foreach ($products as $item): ?><?php //echo '<pre>'; var_dump(is_array($products)); var_dump($item); die;?>

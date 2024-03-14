@@ -1,7 +1,10 @@
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('content') ?>
 
-<?php // при перенаправлении из update() метода  redirect()->to(base_url("/products/show/$inserted_id"))->withInput()->with('success', 'Success! Update a products item.')  ?>
+<?php 
+// при перенаправлении из метода update()
+// redirect()->to(base_url("/products/show/$inserted_id"))->withInput()->with('success', 'Success! Update a products item.');
+?>
 <?php if (session()->has('success') && ! empty(session()->getFlashdata('success'))): ?>
     <h2> <?=esc(session()->getFlashdata('success')) ?> </h2>
 <?php endif ?>
@@ -18,8 +21,9 @@
     <?= esc($product->updated_at) ?><br>
 </div>
 <p><a href="/products/edit/<?= esc($product->id, 'url') ?>">Edit product</a></p>
-
-<?= $this->endSection() ?>  
+<p><a href="/products/remove/<?= esc($product->id, 'url') ?>">Delete product</a></p>
+                                
+<?= $this->endSection() ?>
 <?php // $this->section("scripts")?>
 <?php // script_tag('public/assets/js/script.js') ?>
 <?php // $this->endSection()?>

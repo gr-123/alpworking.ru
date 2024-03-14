@@ -18,19 +18,17 @@ class ProductController extends ResourcePresenter
 		$data['user_data'] = $crudModel->orderBy('id', 'DESC')->paginate(10);
 		$data['pagination_link'] = $crudModel->pager;
 
-
-
-
+    // ? ...
 
     */
+
     /**
      * constructor
      */
     public function __construct()
     {
-        helper(['form', 'url', 'session']);
+        helper(['form', 'url']); // helper(['form', 'url', 'session']); // $this->session = session();
         $this->model = new ProductModel();
-        // $this->session = session();
     }
 
     /**
@@ -68,12 +66,11 @@ class ProductController extends ResourcePresenter
                 'product'  => $this->model->getProducts($id), // find($id)
             ];
             // echo "<pre>"; var_dump($data); die;
-            
+
             // View\products\show.php
             return view('products/show', $data);
-
         } catch (\Throwable $t) {
-            exit( '<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() );
+            exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
         }
 
         // Api: 
@@ -112,28 +109,32 @@ class ProductController extends ResourcePresenter
     {
         // Получить данные ( нет свойства 'slug', создается автоматически в Entity :: setSlug($title) из значения свойства 'title' )
         // $data = [
-            //     'title'   => $this->request->getPost('title'),
-            //     'name'    => $this->request->getPost('name'),
-            //     'price'   => $this->request->getPost('price'),
-            //     'content' => $this->request->getPost('content'),
-            // ];
+        //     'title'   => $this->request->getPost('title'),
+        //     'name'    => $this->request->getPost('name'),
+        //     'price'   => $this->request->getPost('price'),
+        //     'content' => $this->request->getPost('content'),
+        // ];
         $data = $this->request->getPost(['title', 'name', 'price', 'content']); // null, если значение не найдено
-        
+
         // Проверить данные
         if (!$this->validateData($data, [ // Подробнее о библиотеке Validation https://codeigniter.com/user_guide/libraries/validation.html
             'title'    => 'required|max_length[255]|min_length[3]',
             'name'     => 'max_length[255]|min_length[3]',
-            'price'    => array('trim','required','min_length[1]','regex_match[/(^\d+|^\d+[.]\d+)+$/]'), //  массив, поскольку правило регулярного выражения использует канал '|'
+            'price'    => array('trim', 'required', 'min_length[1]', 'regex_match[/(^\d+|^\d+[.]\d+)+$/]'), //  массив, поскольку правило регулярного выражения использует канал '|'
             'content'  => 'max_length[5000]|min_length[10]',
         ])) {
             // Если проверка не удалась возвращаем HTML-форму.
-            return redirect()->back()->withInput()->with('error', 'Ошибка! No validate product.');; // var_export($this->validator->getErrors()); die;
+            return redirect()->back()->withInput()->with('error', 'Ошибка! No validate product.'); // var_export($this->validator->getErrors()); die;
+            // Redirect:
+            // https://codeigniter4.github.io/userguide/outgoing/response.html#redirect
+            // Если вы не знаете код состояния HTTP для перенаправления:
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections
         }
 
         // Получаем проверенные данные
         $post = $this->validator->getValidated(); // getValidated: https://codeigniter.com/user_guide/libraries/validation.html#getting-validated-data
 
-        $entity = new ProductEntity();        
+        $entity = new ProductEntity();
         $entity->fill($post);        // поместить в класс массив пар ключ/значение и заполнить свойства класса
         // Или тоже:
         // $entity = new ProductEntity();        
@@ -183,10 +184,9 @@ class ProductController extends ResourcePresenter
                 'product'  => $this->model->getProducts($id), // find($id)
             ];
             // echo "<pre>"; var_dump($data); die;
-            
+
             // View\products\edit.php
             return view('products/edit', $data);
-
         } catch (\Throwable $t) {
             // var_export($t->getMessage()); exit; // var_export($t); exit; // exit($t->getMessage());
             // exit( '<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() );
@@ -208,18 +208,18 @@ class ProductController extends ResourcePresenter
     {
         // Получить данные ( нет свойства 'slug', создается автоматически в Entity :: setSlug($title) из значения свойства 'title' )
         // $data = [
-            //     'title'   => $this->request->getPost('title'),
-            //     'name'    => $this->request->getPost('name'),
-            //     'price'   => $this->request->getPost('price'),
-            //     'content' => $this->request->getPost('content'),
-            // ];
+        //     'title'   => $this->request->getPost('title'),
+        //     'name'    => $this->request->getPost('name'),
+        //     'price'   => $this->request->getPost('price'),
+        //     'content' => $this->request->getPost('content'),
+        // ];
         $data = $this->request->getPost(['title', 'name', 'price', 'content']); // null, если значение не найдено
-        
+
         // Проверить данные
         if (!$this->validateData($data, [ // Подробнее о библиотеке Validation https://codeigniter.com/user_guide/libraries/validation.html
             'title'    => 'required|max_length[255]|min_length[3]',
             'name'     => 'max_length[255]|min_length[3]',
-            'price'    => array('trim','required','min_length[1]','regex_match[/(^\d+|^\d+[.]\d+)+$/]'), //  массив, поскольку правило регулярного выражения использует канал '|'
+            'price'    => array('trim', 'required', 'min_length[1]', 'regex_match[/(^\d+|^\d+[.]\d+)+$/]'), //  массив, поскольку правило регулярного выражения использует канал '|'
             'content'  => 'max_length[5000]|min_length[10]',
         ])) {
             // Если проверка не удалась возвращаем HTML-форму.
@@ -229,7 +229,7 @@ class ProductController extends ResourcePresenter
         // Получаем проверенные данные
         $post = $this->validator->getValidated(); // getValidated: https://codeigniter.com/user_guide/libraries/validation.html#getting-validated-data
 
-        $entity = new ProductEntity();        
+        $entity = new ProductEntity();
         $entity->fill($post);        // поместить в класс массив пар ключ/значение и заполнить свойства класса
         // Или тоже:
         // $entity = new ProductEntity();        
@@ -270,8 +270,8 @@ class ProductController extends ResourcePresenter
         // curl -i -X PUT -d 'title=titleProduct' -d 'name=Product1' -d 'price=123.00' -d 'slug=c2afjdhj-nation-yes0' -d 'content=hfgh hjhjd hjkkj uilkryr klhkffbfgh' http://alpworking.local/products/update/40
         // 
         // Api:
-        // $data = $this->request->getRawInput(); // получить содержимое php://input в виде необработанного потока
-        // var_dump($this->request->getRawInputVar(['title', 'name']));// Вы также можете использовать getRawInputVar()
+        // $data = $this->request->getRawInput();                       // получить содержимое php://input в виде необработанного потока
+        // var_dump($this->request->getRawInputVar(['title', 'name'])); // Вы также можете использовать getRawInputVar()
         // var_dump($data); die;
         // $data['id'] = $id;
         // if (!$this->model->save($data)) {
@@ -282,6 +282,8 @@ class ProductController extends ResourcePresenter
 
     /**
      * Представить представление для подтверждения удаления определенного объекта ресурса.
+     * 
+     * $routes->GET products/remove/(.*) ProductController::remove/$1
      *
      * @param mixed $id
      *
@@ -289,11 +291,13 @@ class ProductController extends ResourcePresenter
      */
     public function remove($id = null)
     {
-        //
+        return view('products/remove', ['id' => $id]);
     }
 
     /**
      * Обработка удаления определенного объекта ресурса
+     * 
+     * $routes->POST products/delete/(.*) ProductController::delete/$1
      * 
      * @param mixed $id
      * 
@@ -301,66 +305,40 @@ class ProductController extends ResourcePresenter
      */
     public function delete($id = null)
     {
+        $data = $this->model->find($id); // $model->where('id', $id)->delete($id);
+        if (!$data) {
+            return redirect()->back()->withInput()->with('error', sprintf('Sorry! data with id %d not found or already deleted', $id));
+        }
+
+        $response = $this->model->delete($id); // if ($this->model->db->affectedRows() === 0) {
+        if (!$response) {
+            return redirect()->back()->withInput()->with('error', "Sorry, product '$id' not deleted.");
+        }
+
+        return redirect()->to('/products')->withInput()->with('success', "product '$id' deleted.");
+        // return $this->response->redirect('/list'); ?
+
+        // Api:
         // Request Type: DELETE
-
-        // результат успешного и неудачного удаления продукта
-        // curl -i -X DELETE http://alpworking.local/products/1
-        // curl -i -X DELETE http://alpworking.local/products/1 // not found
-
-        //$delete = $this->model->delete($id);
-        // if ($this->model->db->affectedRows() === 0)
-        // {
-        //     return $this->failNotFound(sprintf(
-        //         'product with id %d not found or already deleted',
-        //         $id
-        //     ));
-        // }
-
-        // return $this->respondDeleted(['id' => $id], 'product deleted');
-
-        // session()->setFlashdata('success', 'Success! post deleted.');
-        // return redirect()->to(base_url('/posts')); @return mixed
-
-        // $student = $this->student->find($id);
-        // if ($student) {
-        //     $response = $this->student->delete($id);
+        // 
+        // $data = $this->model->find($id); // $model->where('id', $id)->delete($id);
+        // if ($data) {
+        //     $response = $this->model->delete($id); // if ($this->model->db->affectedRows() === 0) {
         //     if ($response) {
-        //         return $this->respond($student);
+        //         return $this->respond($data);
+        //         // $response = [
+        //         //     'status'   => 200,
+        //         //     'error'    => null,
+        //         //     'messages' => [
+        //         //         'success' => 'Employee successfully deleted'
+        //         //     ]
+        //         // ];
+        //         // return $this->respondDeleted($response); // return $this->respondDeleted(['id' => $id], 'product deleted');
         //     }
         //     return $this->fail('Sorry! not deleted');
         // }
-        // return $this->failNotFound('Sorry! no student found');
-
-        // $model = new EmployeeModel();
-        // $data = $model->where('id', $id)->delete($id);
-        // if($data){
-        //     $model->delete($id);
-        //     $response = [
-        //         'status'   => 200,
-        //         'error'    => null,
-        //         'messages' => [
-        //             'success' => 'Employee successfully deleted'
-        //         ]
-        //     ];
-        //     return $this->respondDeleted($response);
-        // }else{
-        //     return $this->failNotFound('No employee found');
-        // }
-
-        // $data = $model->find($id);
-        // if($data){
-        //     $model->delete($id);
-        //     $response = [
-        //         'status'   => 200,
-        //         'error'    => null,
-        //         'messages' => [
-        //             'success' => 'Data Deleted'
-        //         ]
-        //     ];
-        //     return $this->respondDeleted($response);
-        // }else{
-        //     return $this->failNotFound('No Data Found with id '.$id);
-        // }
-
+        // return $this->failNotFound(sprintf('Sorry! data with id %d not found or already deleted', $id));
+        // 
+        // curl -i -X DELETE http://alpworking.local/products/1
     }
 }

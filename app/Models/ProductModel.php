@@ -99,6 +99,7 @@ class ProductModel extends Model
             // return $this->where(['id' => $id])->first();
             // return $this->getWhere(['id' => $id])->getResult();
         } catch (\Throwable $t) {
+            // exit( '<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString() );
             throw new \Exception("Cannot find the product item: '$id' "); // Exception implements Throwable
         }
 
