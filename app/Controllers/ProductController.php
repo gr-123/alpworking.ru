@@ -63,7 +63,7 @@ class ProductController extends ResourcePresenter
         try {
             $data = [
                 'title' => 'Show a products item',
-                'product'  => $this->model->getProducts($id), // find($id)
+                'item'  => $this->model->getProducts($id), // find($id)
             ];
             // echo "<pre>"; var_dump($data); die;
 
@@ -150,10 +150,17 @@ class ProductController extends ResourcePresenter
         $this->model->save($entity); // только поля из $allowedFields
         // save() автоматически обрабатывает вставку или обновление, когда найден ключ, соответствующий первичному
 
+        // ID созданоого элемента
+        $inserted_id = $this->model->getInsertID();
+
+        // session()->setFlashdata('success', 'Success! product created.');
+        // 
         // Вернуться на страницу успеха
         // View\products\success.php
-        return view('products/success', ['title' => 'Create a products item']);
-        // session()->setFlashdata('success', 'Success! post created.');
+        // return view('products/success', ['title' => 'Create a products item']);
+        // 
+        // Перейти на страницу показа созданного элемента
+        return redirect()->to("/products/show/$inserted_id")->withInput()->with('success', 'Success! Create a products item.'); // setFlashdata()
 
         // Api:
         // return $this->fail($this->model->errors());             //https://codeigniter.com/user_guide/outgoing/api_responses.html#fail
@@ -256,7 +263,7 @@ class ProductController extends ResourcePresenter
         $inserted_id = $this->model->getInsertID();
 
         // Вывести страницу показа представления этого, но теперь уже обновленного элемента
-        return redirect()->to(base_url("/products/show/$inserted_id"))->withInput()->with('success', 'Success! Update a products item.'); // setFlashdata()
+        return redirect()->to("/products/show/$inserted_id")->withInput()->with('success', 'Success! Update a products item.'); // setFlashdata()
 
 
 

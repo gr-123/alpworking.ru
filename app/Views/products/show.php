@@ -22,7 +22,7 @@
 
         <div class="card-header">
             <div class="row">
-                <div class="col">Данные <?= esc($title . ": '$product->title'") ?></div>
+                <div class="col">Данные <?= esc($title . ": '$item->title'") ?></div>
                 <div class="col text-right"></div>
             </div>
         </div>
@@ -44,21 +44,22 @@
                         <th>Delete</th>
                     </tr>
 
-                    <?php if (isset($product) && !empty($product)) : ?><?php //echo '<pre>'; var_dump(is_array($product)); die;
+                    <?php if (isset($item) && !empty($item)) : ?><?php //echo '<pre>'; var_dump(is_array($product)); die;
                                                                         ?>
                     <tr>
-                        <td><?= esc($product->id) ?></td>
-                        <td><?= esc($product->title) ?></td>
-                        <td><?= esc($product->name) ?></td>
-                        <td><?= esc($product->price) ?></td>
-                        <td><?= esc($product->slug) ?></td>
-                        <td><?= esc($product->content) ?></td>
-                        <td><?= esc($product->updated_at) ?></td>
-                        <td><a href="/products/show/<?= esc($product->id, 'url') ?>" class="btn btn-sm btn-warning">View</a></td>
-                        <td><a href="/products/edit/<?= esc($product->id, 'url') ?>" class="btn btn-sm btn-warning">Edit</a></td>
-                        <td><a href="/products/remove/<?= esc($product->id, 'url') ?>" class="btn btn-sm btn-warning">Delete</a></td>
-                        <td><!-- <a href="/products/remove/<?= esc($product->id, 'url') ?>" class="btn btn-sm btn-warning">Delete</a> --></td>
-                        <td><!-- <button type="button" onclick="delete_data(' . <?= esc($product->id, 'url') ?> . ')" class="btn btn-danger btn-sm">Delete</button> --></td>
+                        <td><?= esc($item->id) ?></td>
+                        <td><?= esc($item->title) ?></td>
+                        <td><?= esc($item->name) ?></td>
+                        <td><?= esc($item->price) ?></td>
+                        <td><?= esc($item->slug) ?></td>
+                        <td><?= esc($item->content) ?></td>
+                        <td><?= esc($item->updated_at) ?></td>
+                        <td><a href="/products/show/<?= esc($item->id, 'url') ?>" class="btn btn-outline-primary">View</a></td>
+                        <td><a href="/products/edit/<?= esc($item->id, 'url') ?>" class="btn btn-outline-success">Edit</a></td>
+                        <td><a href="/products/remove/<?= esc($item->id, 'url') ?>" class="btn btn-outline-danger">Delete</a>
+                        <!-- <a href="/products/remove/<?= esc($item->id, 'url') ?>" class="btn btn-sm btn-warning">Delete</a> -->
+                        <!-- <button type="button" onclick="delete_data(' . <?= esc($item->id, 'url') ?> . ')" class="btn btn-danger btn-sm">Delete</button> -->
+                        </td>
                     </tr>
 
                 <?php else : ?>

@@ -53,10 +53,12 @@
                             <td><?= esc($item->slug) ?></td>
                             <td><?= esc($item->content) ?></td>
                             <td><?= esc($item->updated_at) ?></td>
-                            <td><a href="/products/show/<?= esc($item->id, 'url') ?>" class="btn btn-sm btn-warning">View</a></td>
-                            <td><a href="/products/edit/<?= esc($item->id, 'url') ?>" class="btn btn-sm btn-warning">Edit</a></td>
-                            <td><!-- <a href="/products/remove/<?= esc($item->id, 'url') ?>" class="btn btn-sm btn-warning">Delete</a> --></td>
-                            <td><!-- <button type="button" onclick="delete_data(' . <?= esc($item->id, 'url') ?> . ')" class="btn btn-danger btn-sm">Delete</button> --></td>
+                        <td><a href="/products/show/<?= esc($item->id, 'url') ?>" class="btn btn-outline-primary">View</a></td>
+                        <td><a href="/products/edit/<?= esc($item->id, 'url') ?>" class="btn btn-outline-success">Edit</a></td>
+                        <td><a href="/products/remove/<?= esc($item->id, 'url') ?>" class="btn btn-outline-danger">Delete</a>
+                            <!-- <a href="/products/remove/<?= esc($item->id, 'url') ?>" class="btn btn-sm btn-warning">Delete</a> -->
+                            <!-- <button type="button" onclick="delete_data(' . <?= esc($item->id, 'url') ?> . ')" class="btn btn-danger btn-sm">Delete</button> -->
+                            </td>
                         </tr>
 
                     <?php endforeach ?>
