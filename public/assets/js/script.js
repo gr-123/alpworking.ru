@@ -1,7 +1,15 @@
 
 
 
-{/* <button onclick="deleteItem('<?php echo esc($id, 'url'); ?>')">Delete Item</button>
+/* 
+<form class="display-none" method="post" action="<?= base_url('products/delete/' . esc($id, 'url')) ?>" id="postDeleteForm<?= $post['id'] ?>">
+    <input type="hidden" name="_method" value="DELETE" /><a href="javascript:void(0)" onclick="deletePost('postDeleteForm<?= $post['id'] ?>')">Delete</a>
+</form>
+<script>function deletePost(formId) {if (window.confirm('Delete?') == true) {document.getElementById(formId).submit();}}</script>
+
+-------------------------------------------------------------------------------
+
+<button onclick="deleteItem('<?php echo esc($id, 'url'); ?>')">Delete Item</button>
 <script>
     function deleteItem(id) {
         if (confirm("Удалить этот элемент? '" + id + "'")) {
@@ -17,7 +25,8 @@
 
         return false;
     }
-</script> */}
+</script>
+*/
 
 
 

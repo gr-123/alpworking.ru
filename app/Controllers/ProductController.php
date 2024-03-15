@@ -181,7 +181,9 @@ class ProductController extends ResourcePresenter
         try {
             $data = [
                 'title_page' => 'Edit a products item',
-                'product'  => $this->model->getProducts($id), // find($id)
+                // Проверим существование объекта продукта в базе данных
+                // Если не найдено, перенаправляем обратно на страницу редактирования
+                'product'  => $this->model->getProducts($id), // ->find($id) // $model->where('id', $id)->first($id);
             ];
             // echo "<pre>"; var_dump($data); die;
 
@@ -191,7 +193,7 @@ class ProductController extends ResourcePresenter
             // var_export($t->getMessage()); exit; // var_export($t); exit; // exit($t->getMessage());
             // exit( '<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() );
 
-            return redirect()->back()->withInput()->with('error', 'No product found. <pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine());
+            return redirect()->back()->withInput()->with('error', sprintf('Sorry! Данные с идентификатором %d не найдены или уже удалены. <pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine(), $id ));
         }
     }
 
@@ -206,6 +208,11 @@ class ProductController extends ResourcePresenter
      */
     public function update($id = null)
     {
+        // post value from 'hidden' Form field
+        // $hidden_id = $this->request->getPost(['id']); // null, если значение не найдено
+
+        // Проверка существование объекта продукта в базе данных уже была проведена в методе 'edit', см. выше
+
         // Получить данные ( нет свойства 'slug', создается автоматически в Entity :: setSlug($title) из значения свойства 'title' )
         // $data = [
         //     'title'   => $this->request->getPost('title'),
@@ -307,7 +314,7 @@ class ProductController extends ResourcePresenter
     {
         $data = $this->model->find($id); // $model->where('id', $id)->delete($id);
         if (!$data) {
-            return redirect()->back()->withInput()->with('error', sprintf('Sorry! data with id %d not found or already deleted', $id));
+            return redirect()->back()->withInput()->with('error', sprintf('Sorry! Данные с идентификатором %d не найдены или уже удалены.', $id));
         }
 
         $response = $this->model->delete($id); // if ($this->model->db->affectedRows() === 0) {
