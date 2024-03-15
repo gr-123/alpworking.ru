@@ -16,7 +16,7 @@ class ProductController extends ResourcePresenter
     /*
     https://www.webslesson.info/2020/10/codeigniter-4-crud-tutorial.html
 		$data['user_data'] = $crudModel->orderBy('id', 'DESC')->paginate(10);
-		$data['pagination_link'] = $crudModel->pager;
+		$data['pagination'] = $crudModel->pager;
 
     // ? ...
 
@@ -40,9 +40,11 @@ class ProductController extends ResourcePresenter
      */
     public function index()
     {
+        $paginations = $this->model->getPagination(4);
         $data = [
             'title' => 'Products archive',
-            'products'  => $this->model->getProducts(), // findAll
+            'products'  => $paginations['products'],
+            'pager'  => $paginations['pager'],
         ];
         // echo "<pre>"; var_dump($data); die;
 

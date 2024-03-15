@@ -85,24 +85,43 @@ class ProductModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    /**
+     * 
+     * @param string $id выбрать все или только один элемент
+     * 
+     * Возвращает один или несколько элементов таблицы
+     */
     public function getProducts($id = false)
     {
         // https://codeigniter.com/user_guide/database/query_builder.html
 
         if ($id === false) {
-            return $this->findAll();
-            // return $this->orderBy('id', 'DESC')->findAll();
+            // все элементы
+            return $this->findAll(); // return $this->orderBy('id', 'DESC')->findAll();
         }
 
-        try {           
-            return $this->find($id);
-            // return $this->where(['id' => $id])->first();
-            // return $this->getWhere(['id' => $id])->getResult();
+        try {
+            // только один заданный элемент
+            return $this->find($id); // return $this->where(['id' => $id])->first(); // return $this->getWhere(['id' => $id])->getResult();
         } catch (\Throwable $t) {
             // exit( '<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString() );
             throw new \Exception("Cannot find the product item: '$id' "); // Exception implements Throwable
         }
+    }
 
+    /**
+     * Пагинация страниц https://codeigniter4.github.io/userguide/libraries/pagination.html#pagination
+     * 
+     * @param ?int $perPage колличество выводимых страниц
+     * 
+     * @return array
+     */
+    public function getPagination(?int $perPage = null): array
+    {
+        return [
+            'products'  => $this->orderBy('id', 'DESC')->paginate($perPage),
+            'pager' => $this->pager,
+        ];
     }
 
     // Из модели в CodeIgniter 4 мы можем разбить на страницы существующий запрос, который мы используем в текущей таблице, определенной в $tableсвойстве, например, в модели, как показано ниже:
@@ -116,7 +135,7 @@ class ProductModel extends Model
     //                  ->orLike('product_name', $keyword)
     //              ->groupEnd();
     //     }
- 
+
     //     return [
     //         'products'  => $this->paginate(),
     //         'pager'     => $this->pager,
@@ -158,7 +177,7 @@ class ProductModel extends Model
     //              ->select(["{$this->table}.*", 'price.price'])
     //              ->join('price', "{$this->table}.id = price.product_id")
     //              ->where("price.date = DATE_FORMAT(NOW(),'%Y-%m-%d')");
-     
+
     //         return [
     //             'productWithPrices'  => $this->asObject(ProductWithPrice::class)->paginate(),
     //             'pager'              => $this->pager,

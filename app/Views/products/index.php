@@ -76,9 +76,9 @@
 
                 <?php
 
-                if (isset($pagination) && !empty($pagination)) {
-                    $pagination->setPath('products');
-                    echo $pagination->links();
+                if (isset($pager) && !empty($pager)) {
+                    $pager->setPath('products');
+                    echo $pager->links();
                 }
 
                 ?>
