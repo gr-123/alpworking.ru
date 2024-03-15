@@ -5,9 +5,6 @@
 <div class="container">
     <h2 class="text-center mt-4 mb-4"><?= esc($title) ?></h2>
 
-    <?php $session = \Config\Services::session(); // ?? 
-    ?>
-
     <?php if (session()->has('success') && !empty(session()->getFlashdata('success'))) : ?>
         <div class="alert alert-success">
             <?= esc(session()->getFlashdata('success')) ?>

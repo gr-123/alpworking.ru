@@ -68,12 +68,12 @@ class ProductController extends ResourcePresenter
                 'item'  => $this->model->getProducts($id), // find($id)
             ];
             // echo "<pre>"; var_dump($data); die;
-
-            // View\products\show.php
-            return view('products/show', $data);
         } catch (\Throwable $t) {
             exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
         }
+
+        // View\products\show.php
+        return view('products/show', $data);
 
         // Api: 
         // if(! $data){ return $this->failNotFound(sprintf('product with id %d not found', $id)); }// вывод всегда только такой: 404 Not Found
@@ -202,7 +202,7 @@ class ProductController extends ResourcePresenter
             // var_export($t->getMessage()); exit; // var_export($t); exit; // exit($t->getMessage());
             // exit( '<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() );
 
-            return redirect()->back()->withInput()->with('error', sprintf('Sorry! Данные с идентификатором %d не найдены или уже удалены. <pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine(), $id ));
+            return redirect()->back()->withInput()->with('error', sprintf('Sorry! Данные с идентификатором %d не найдены или уже удалены. <pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine(), $id));
         }
     }
 
@@ -256,18 +256,21 @@ class ProductController extends ResourcePresenter
         // $entity->content = $post['content'];
 
         // echo "<pre>"; var_dump($post); var_dump($entity); die;
-
-        // Сохранить данные
-        $this->model->save($entity); // только поля из $allowedFields
-        // save() автоматически обрабатывает вставку или обновление, когда найден ключ, соответствующий первичному
+        
+        try {
+            // Сохранить данные
+            $this->model->save($entity); // только поля из $allowedFields
+            // save() автоматически обрабатывает вставку или обновление, когда найден ключ, соответствующий первичному            
+        } catch (\Throwable $t) {
+            // exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
+            return redirect()->back()->withInput()->with('error', $t->getMessage()); // setFlashdata()
+        }
 
         // ID обновленного элемента
         $inserted_id = $this->model->getInsertID();
 
         // Вывести страницу показа представления этого, но теперь уже обновленного элемента
         return redirect()->to("/products/show/$inserted_id")->withInput()->with('success', 'Success! Update a products item.'); // setFlashdata()
-
-
 
         // PUT-запрос – запись обновления
         // Для обновления любого поля вам необходимо использовать Request Type: PUT
@@ -323,7 +326,7 @@ class ProductController extends ResourcePresenter
     {
         $data = $this->model->find($id); // $model->where('id', $id)->delete($id);
         if (!$data) {
-            return redirect()->back()->withInput()->with('error', sprintf('Sorry! Данные с идентификатором %d не найдены или уже удалены.', $id));
+            return redirect()->back()->withInput()->with('error', "Sorry! Данные с идентификатором '$id' не найдены или уже удалены.");
         }
 
         $response = $this->model->delete($id); // if ($this->model->db->affectedRows() === 0) {

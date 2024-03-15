@@ -5,9 +5,6 @@
 <div class="container">
     <h2 class="text-center mt-4 mb-4"><?= esc($title) ?></h2>
 
-    <?php $session = \Config\Services::session(); // ?? 
-    ?>
-
     <!-- 
 session() 
     Функция session() используется для получения объекта Session, а 
@@ -21,8 +18,13 @@ validation_list_errors()
     Функция validation_list_errors(), предоставляемая помощником формы, используется для 
     сообщения об ошибках, связанных с проверкой формы.
     -->
-    <?= session()->getFlashdata('error') ?>
-    <?= validation_list_errors() ?>
+
+    <?php if (session()->has('error') && !empty(session()->getFlashdata('error'))) : ?>
+        <div class="alert alert-danger">
+            <?= esc(session()->getFlashdata('error')) ?>
+            <?= validation_list_errors() ?>
+        </div>
+    <?php endif ?>
 
     <?php $validation =  \Config\Services::validation(); // validation()->listErrors(); 
     ?>

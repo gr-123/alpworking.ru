@@ -5,9 +5,6 @@
 <div class="container">
     <h2 class="text-center mt-4 mb-4"><?= esc($title) ?></h2>
 
-    <?php $session = \Config\Services::session(); // ?? 
-    ?>
-
     <?php
     // при перенаправлении из метода update()
     // redirect()->to(base_url("/products/show/$inserted_id"))->withInput()->with('success', 'Success! Update a products item.');
