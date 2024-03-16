@@ -74,6 +74,7 @@ class ProductModel extends Model
         'price'    => array('trim', 'required', 'min_length[1]', 'regex_match[/(^\d+|^\d+[.]\d+)+$/]'), //  массив, поскольку правило регулярного выражения использует канал '|'
         'content'  => 'max_length[5000]|min_length[10]',
 
+        // Заполнители проверки https://codeigniter.com/user_guide/models/model.html#validation-placeholders
         // Примечание
         // Начиная с версии 4.3.5, необходимо установить правила проверки для поля-заполнителя ( id).
         // 'id'    => 'max_length[19]|is_natural_no_zero',

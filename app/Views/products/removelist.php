@@ -74,8 +74,11 @@
                                                                 ?>
 
                         <tr>
-                            <!-- set_checkbox https://codeigniter.com/user_guide/helpers/form_helper.html#set_checkbox -->
-                            <td><input type="checkbox" name="id_items[]" value="<?= esc($item->id) ?>"><!-- foreach($_POST['lang'] as $value){echo "value : ".$value.'<br/>';} --></td>
+                            <!-- 
+                                set_checkbox https://codeigniter.com/user_guide/helpers/form_helper.html#set_checkbox 
+                                form_checkbox https://codeigniter.com/user_guide/helpers/form_helper.html#form_checkbox
+                                 -->
+                            <td><?= form_checkbox('id_items[]', esc($item->id)) ?></td>
                             <td><?= esc($item->id) ?></td>
                             <td><?= esc($item->title) ?></td>
                             <td><?= esc($item->name) ?></td>
