@@ -32,7 +32,6 @@ class ProductModel extends Model
     // класс Entity как $returnType. Это гарантирует, что все методы модели, которые возвращают строки из базы 
     // данных, будут возвращать экземпляры нашего класса Entity вместо объекта или массива, как обычно
     protected $returnType       = ProductEntity::class;
-    // protected $returnType       = 'array';
 
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
@@ -64,13 +63,33 @@ class ProductModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
-    // protected $validationRules      = [
-    //     // 'code' => 'required|alpha_numeric|exact_length[5]|is_unique[products.code,id,{id}]',
-    //     'name' => 'required|alpha_numeric_space|min_length[3]|max_length[255]|is_unique[products.name,id,{id}]',
-    //     // 'amount' => 'required',
-    // ];
-    protected $validationMessages   = [];
+    // Проверка в модели: https://codeigniter.com/user_guide/models/model.html#in-model-validation
+    // validationRules
+    // массив правил проверки, либо имя группы проверки https://codeigniter.com/user_guide/libraries/validation.html#validation-array
+    // protected $validationRules = 'users'; // группа правил проверки в файле конфигурации проверки
+    // или
+    protected $validationRules      = [
+        'title'    => 'required|max_length[255]|min_length[3]',
+        'name'     => 'max_length[255]|min_length[3]',
+        'price'    => array('trim', 'required', 'min_length[1]', 'regex_match[/(^\d+|^\d+[.]\d+)+$/]'), //  массив, поскольку правило регулярного выражения использует канал '|'
+        'content'  => 'max_length[5000]|min_length[10]',
+
+        // Примечание
+        // Начиная с версии 4.3.5, необходимо установить правила проверки для поля-заполнителя ( id).
+        // 'id'    => 'max_length[19]|is_natural_no_zero',
+        // 'code' => 'required|alpha_numeric|exact_length[5]|is_unique[products.code,id,{id}]',
+        // 'name' => 'required|alpha_numeric_space|min_length[3]|max_length[255]|is_unique[products.name,id,{id}]',
+        // 'amount' => 'required',
+        
+        // 'username'     => 'required|max_length[30]|alpha_numeric_space|min_length[3]',
+        // 'email'        => 'required|max_length[254]|valid_email|is_unique[users.email]',
+        // 'password'     => 'required|max_length[255]|min_length[8]',
+        // 'pass_confirm' => 'required_with[password]|max_length[255]|matches[password]',
+    ];
+    // 
+    // validationMessages
+    // Если у вас есть собственное сообщение об ошибке, которое вы хотите использовать
+    protected $validationMessages   = []; // массив пользовательских сообщений об ошибках
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 

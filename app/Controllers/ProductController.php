@@ -56,6 +56,8 @@ class ProductController extends ResourcePresenter
     }
 
     /**
+     * GET products/show/(.*) \App\Controllers\ProductController::show/$1 
+     * 
      * @param string $id
      *
      * @return ResponseInterface
@@ -85,7 +87,7 @@ class ProductController extends ResourcePresenter
     /**
      * Отображение формы добавления
      * 
-     * $routes->GET products/new ProductController::new  
+     * GET products/new \App\Controllers\ProductController::new   
      * 
      * @return mixed
      */
@@ -117,14 +119,15 @@ class ProductController extends ResourcePresenter
         //     'content' => $this->request->getPost('content'),
         // ];
         $data = $this->request->getPost(['title', 'name', 'price', 'content']); // null, если значение не найдено
-
+        
+        // Подробнее о библиотеке Validation https://codeigniter.com/user_guide/libraries/validation.html
+        // Проверка в модели: https://codeigniter.com/user_guide/models/model.html#in-model-validation
+        // $rules = $model->getValidationRules(['except' => ['username']]);
+        // $rules = $model->getValidationRules(['only' => ['city', 'state']]);
+        $rules = $this->model->getValidationRules();
+        
         // Проверить данные
-        if (!$this->validateData($data, [ // Подробнее о библиотеке Validation https://codeigniter.com/user_guide/libraries/validation.html
-            'title'    => 'required|max_length[255]|min_length[3]',
-            'name'     => 'max_length[255]|min_length[3]',
-            'price'    => array('trim', 'required', 'min_length[1]', 'regex_match[/(^\d+|^\d+[.]\d+)+$/]'), //  массив, поскольку правило регулярного выражения использует канал '|'
-            'content'  => 'max_length[5000]|min_length[10]',
-        ])) {
+        if (! $this->validateData($data, $rules)) {
             // Если проверка не удалась возвращаем HTML-форму.
             return redirect()->back()->withInput()->with('error', 'Ошибка! No validate product.'); // var_export($this->validator->getErrors()); die;
             // Redirect:
@@ -149,8 +152,17 @@ class ProductController extends ResourcePresenter
         // echo "<pre>"; var_dump($post); var_dump($entity); die;
 
         // Сохранить данные
-        $this->model->save($entity); // только поля из $allowedFields
-        // save() автоматически обрабатывает вставку или обновление, когда найден ключ, соответствующий первичному
+        // if ($model->save($data) === false) {return view('updateUser', ['errors' => $model->errors()]);}
+        try {
+            // Сохранить данные
+            $this->model->save($entity); // только поля из $allowedFields
+            // save() автоматически обрабатывает вставку или обновление, когда найден ключ, соответствующий первичному            
+        } catch (\Throwable $t) {
+            // exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
+
+            session()->setFlashdata('errors', $this->model->errors());
+            return redirect()->back()->withInput()->with('error', $t->getMessage() . ', Ошибки проверки: ' . implode(", ", $this->model->errors())); // setFlashdata()
+        }
 
         // ID созданоого элемента
         $inserted_id = $this->model->getInsertID();
@@ -179,7 +191,7 @@ class ProductController extends ResourcePresenter
     /**
      * Вывод формы для редактирования
      * 
-     * $routes->GET products/edit ProductController::edit  
+     * $routes->GET products/edit/(.*) ProductController::edit/$1
      * 
      * @param mixed $id
      * 
@@ -187,9 +199,13 @@ class ProductController extends ResourcePresenter
      */
     public function edit($id = null)
     {
+        if (empty($id || $id == null)) {
+            return redirect()->to('products')->withInput()->with('error', 'Возможна ошибка.');
+        }
+
         try {
             $data = [
-                'title_page' => 'Edit a products item',
+                'title' => 'Edit a products item',
                 // Проверим существование объекта продукта в базе данных
                 // Если не найдено, перенаправляем обратно на страницу редактирования
                 'product'  => $this->model->getProducts($id), // ->find($id) // $model->where('id', $id)->first($id);
@@ -231,17 +247,34 @@ class ProductController extends ResourcePresenter
         // ];
         $data = $this->request->getPost(['title', 'name', 'price', 'content']); // null, если значение не найдено
 
+        // Подробнее о библиотеке Validation https://codeigniter.com/user_guide/libraries/validation.html
+        // Проверка в модели: https://codeigniter.com/user_guide/models/model.html#in-model-validation
+        // $rules = $model->getValidationRules(['except' => ['username']]);
+        // $rules = $model->getValidationRules(['only' => ['city', 'state']]);
+        $rules = $this->model->getValidationRules();
+
         // Проверить данные
-        if (!$this->validateData($data, [ // Подробнее о библиотеке Validation https://codeigniter.com/user_guide/libraries/validation.html
-            'title'    => 'required|max_length[255]|min_length[3]',
-            'name'     => 'max_length[255]|min_length[3]',
-            'price'    => array('trim', 'required', 'min_length[1]', 'regex_match[/(^\d+|^\d+[.]\d+)+$/]'), //  массив, поскольку правило регулярного выражения использует канал '|'
-            'content'  => 'max_length[5000]|min_length[10]',
-        ])) {
+        if (! $this->validateData($data, $rules)) {
             // Если проверка не удалась возвращаем HTML-форму.
-            return redirect()->back()->withInput(); // var_export($this->validator->getErrors()); die;
+            return redirect()->back()->withInput()->with('error', 'Ошибка! No validate product.');
+            // var_export($this->validator->getErrors()); die;
+            /*
+            * Produces:
+            * [
+            *     'field1' => 'error message',
+            *     'field2' => 'error message',
+            * ]
+            */
+            // https://codeigniter.com/user_guide/libraries/validation.html#getting-a-single-error
+            // $error = $validation->getError('username');
+            // if ($validation->hasError('username')) {
+            //     echo $validation->getError('username');
+            // }
         }
 
+        // if (!$this->validator->run($data)) {
+        //     return redirect()->back()->withInput()->with('error', 'Ошибка! No validate product.');
+        // }
         // Получаем проверенные данные
         $post = $this->validator->getValidated(); // getValidated: https://codeigniter.com/user_guide/libraries/validation.html#getting-validated-data
 
@@ -256,14 +289,18 @@ class ProductController extends ResourcePresenter
         // $entity->content = $post['content'];
 
         // echo "<pre>"; var_dump($post); var_dump($entity); die;
-        
+
+        // Сохранить данные
+        // if ($model->save($data) === false) {return view('updateUser', ['errors' => $model->errors()]);}
         try {
             // Сохранить данные
             $this->model->save($entity); // только поля из $allowedFields
             // save() автоматически обрабатывает вставку или обновление, когда найден ключ, соответствующий первичному            
         } catch (\Throwable $t) {
             // exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
-            return redirect()->back()->withInput()->with('error', $t->getMessage()); // setFlashdata()
+
+            session()->setFlashdata('errors', $this->model->errors());
+            return redirect()->back()->withInput()->with('error', $t->getMessage() . ', Ошибки проверки: ' . implode(", ", $this->model->errors())); // setFlashdata()
         }
 
         // ID обновленного элемента
@@ -300,47 +337,103 @@ class ProductController extends ResourcePresenter
     }
 
     /**
-     * Представить представление для подтверждения удаления определенного объекта ресурса.
+     * Представить представление для удаления определенного объекта, либо для возможности выбора нескольких.
      * 
-     * $routes->GET products/remove/(.*) ProductController::remove/$1
+     * GET products/remove/(.*) ProductController::remove/$1
      *
-     * @param mixed $id
+     * @param mixed $id Если 'id' === 'list' тогда загружаем страницу со всеми объектами и формой выбора нескольких объектов для удаления
      *
      * @return mixed
      */
     public function remove($id = null)
     {
+        // Если не задан индетификатор, тогда открываем страницу списка для выбора многих строк (элементов) и последующего удаления
+        if ($id === 'list') {
+            // такая же пагинация, как и в методе 'index'
+            $paginations = $this->model->getPagination(4);
+            $data = [
+                'title' => 'Выбор элементов для удаления',
+                'products'  => $paginations['products'],
+                'pager'  => $paginations['pager'],
+            ];
+            // View\products\removelist.php
+            return view('products/removelist', $data);
+        }
+
         return view('products/remove', ['id' => $id]);
     }
 
     /**
-     * Обработка удаления определенного объекта ресурса
+     * Обработка удаления одного или нескольких объектов
      * 
-     * $routes->POST products/delete/(.*) ProductController::delete/$1
+     * POST products/delete/(.*) ProductController::delete/$1
      * 
-     * @param mixed $id
+     * @param mixed $id Если 'id' === 'checkbox' тогда удаляются один или несколько выбранных объектов
      * 
      * @return mixed
      */
     public function delete($id = null)
     {
-        $data = $this->model->find($id); // $model->where('id', $id)->delete($id);
-        if (!$data) {
-            return redirect()->back()->withInput()->with('error', "Sorry! Данные с идентификатором '$id' не найдены или уже удалены.");
+        // dd($this->request); var_dump($id);die;
+
+        // массив для сохранения значений 'id' всех удаляемых объектов
+        $id_data = array();
+
+        // if (empty($id || $id == null)) { // бесполезно, все равно (в связи с маршрутами 'prezenter' все запросы перенаправляются на 'show' метод контроллера)
+        //     return redirect()->to('products')->withInput()->with('error', 'Возможна ошибка.');
+        // }
+
+        // Получение выбранных чекбоксов из формы (см. app/Views/products/index.php )
+        // для удаления сразу нескольких объектов
+        if ($id === 'checkbox') {
+            $items = $this->request->getPost('id_items'); // null, если значение не найдено
+
+            // Если ничего не выбрано из выведенного списка элементов на странице app/Views/products/removelist.php
+            if (empty($items)) {
+                return redirect()->back()->withInput()->with('error', 'Ошибка. Выберите элементы.');
+            }
+
+            // добавим в массив значения 'id' всех удаляемых объектов
+            foreach ($items as $item) {
+                $id_data[] = $item;
+            }
+        } else {
+            $id_data[] = $id;
         }
 
-        $response = $this->model->delete($id); // if ($this->model->db->affectedRows() === 0) {
-        if (!$response) {
-            return redirect()->back()->withInput()->with('error', "Sorry, product '$id' not deleted.");
+        // Удаление:
+        // через перечисление массива в цикле:
+        // foreach ($id_data as $id_item) {
+        //     if (! $this->model->find($id_item)) {
+        //         return redirect()->back()->withInput()->with('error', "Sorry! Данные с идентификатором '$id' не найдены или уже удалены.");
+        //     }
+        //     if (!$this->model->delete($id_item)) {
+        //         return redirect()->back()->withInput()->with('error', "Sorry, product '$id_item' not deleted.");
+        //     }
+        // }
+        // Или одной строкой, без предварительного поиска:
+        try {
+            $this->model->delete($id_data);
+        } catch (\Throwable $t) {
+            // exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
+
+            session()->setFlashdata('errors', $this->model->errors());
+            return redirect()->back()->withInput()->with('error', $t->getMessage() . ', Ошибки удаления: ' . implode(", ", $this->model->errors())); // setFlashdata()
         }
 
-        return redirect()->to('/products')->withInput()->with('success', "product '$id' deleted.");
-        // return $this->response->redirect('/list'); ?
+
+
+        // stringify_attributes ( $attributes[, $js] 
+        //  - $attributes ( mixed) – строка, массив пар ключ-значение или объект 
+        //  - $js ( boolean) – true, если значения не нуждаются в кавычках (стиль Javascript)
+        // Возврат: Строка, содержащая пары ключ/значение атрибута, разделенные запятыми. Тип возврата: string
+
+        return redirect()->to('/products')->withInput()->with('success', "Deleted: '" . implode("', '", $id_data) . "'");
 
         // Api:
         // Request Type: DELETE
         // 
-        // $data = $this->model->find($id); // $model->where('id', $id)->delete($id);
+        // $data = $this->model->find($id);
         // if ($data) {
         //     $response = $this->model->delete($id); // if ($this->model->db->affectedRows() === 0) {
         //     if ($response) {

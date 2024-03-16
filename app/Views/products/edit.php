@@ -3,26 +3,37 @@
 <?= $this->section('content') ?>
 
 <div class="container">
-    <h2 class="text-center mt-4 mb-4"><?= esc($title_page . ": '$product->title'") ?></h2>
-
-    <!-- 
-session() 
-    Функция session() используется для получения объекта Session, а 
-    session()->getFlashdata('error') используется для 
-    отображения пользователю ошибки, связанной с защитой CSRF. 
-    Однако по умолчанию, если проверка CSRF не удалась, будет выдано исключение, поэтому оно пока не работает. 
-    Дополнительную информацию см. в разделе «Перенаправление в случае сбоя». 
-    https://codeigniter.com/user_guide/libraries/security.html#csrf-redirection-on-failure
-
-validation_list_errors()
-    Функция validation_list_errors(), предоставляемая помощником формы, используется для 
-    сообщения об ошибках, связанных с проверкой формы.
-    -->
+    <h2 class="text-center mt-4 mb-4"><?= esc($title . ": '$product->title'") ?></h2>
 
     <?php if (session()->has('error') && !empty(session()->getFlashdata('error'))) : ?>
         <div class="alert alert-danger">
-            <?= esc(session()->getFlashdata('error')) ?>
-            <?= validation_list_errors() ?>
+            <?php
+            echo esc(session()->getFlashdata('error'));
+            // https://codeigniter.com/user_guide/helpers/form_helper.html#validation_errors
+            // 
+            // Возвращает ошибки проверки Validation::getErrors(), хранящиеся в сеансе, 
+            // вам нужно использовать withInput() с redirect()
+            // print_r(validation_errors());     // Return type: array
+            // 
+            // Возвращает визуализированный HTML-код ошибок проверки, 
+            // используется validation_errors() внутренне, не работает с проверкой в ​​модели
+            echo validation_list_errors();   // Return type: string
+            // 
+            // Возвращает одну ошибку для указанного поля в форматированном HTML, 
+            // используется validation_errors() внутренне, не работает с проверкой в ​​модели
+            // echo validation_show_error($field); // Return type: string
+            // 
+            // Получение ошибок проверки в ​​модели: 
+            // https://codeigniter.com/user_guide/models/model.html#getting-validation-errors
+            ?>
+        </div>
+    <?php endif ?>
+    
+    <?php if (!empty($errors)) : ?>
+        <div class="alert alert-danger">
+            <?php foreach ($errors as $field => $error) : ?>
+                <p><?= esc($error) ?></p>
+            <?php endforeach ?>
         </div>
     <?php endif ?>
 

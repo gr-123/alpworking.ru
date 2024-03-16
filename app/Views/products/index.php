@@ -17,6 +17,7 @@
                 <div class="col">Данные продуктов</div>
                 <div class="col text-right">
                     <a href="<?php echo base_url("products/new") ?>" class="btn btn-success btn-sm">Создать</a>
+                    <a href="<?php echo base_url("products/remove/list") ?>" class="btn btn-success btn-sm">Выбрать</a>
                 </div>
             </div>
         </div>
