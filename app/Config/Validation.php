@@ -39,13 +39,16 @@ class Validation extends BaseConfig
     ];
 
     // --------------------------------------------------------------------
-    // Rules
+    // Rules - группы правил
     // --------------------------------------------------------------------
 
     // https://codeigniter.com/user_guide/libraries/validation.html#how-to-save-your-rules
     // Подробную информацию о форматировании массива см. в разделе «Настройка пользовательских сообщений об ошибках» .
     // https://codeigniter.com/user_guide/libraries/validation.html#validation-custom-errors
     
+    // ------------------------------------------------------------------------
+    // 'signup'
+    // ------------------------------------------------------------------------
     public array $signup = [
         'username'     => 'required|max_length[30]',
         'email'        => 'required|max_length[254]|valid_email',
@@ -64,20 +67,25 @@ class Validation extends BaseConfig
         ],
         'password' => [
             'required' => '"password" является обязательным - не заполнен.',
-            'min_length' => 'Your password is too short. You want to get hacked?',
+            // 'min_length' => 'Предоставленное значение ({value}) для {field} должно содержать не менее {param} символов.', // Предупреждение
+            // Если вы получаете сообщения об ошибках с помощью getErrors()или getError(), сообщения не экранируются HTML. 
+            // Если вы используете данные пользовательского ввода, например ({value}), для создания сообщения об ошибке, 
+            // они могут содержать теги HTML. Если вы не экранируете сообщения перед их отображением, возможны XSS-атаки.
+
         ],
         'pass_confirm' => [
             'required' => '"pass_confirm" является обязательным - не заполнен.',
         ],
     ];
+    // << 'signup'
+    // ------------------------------------------------------------------------
 
     // ------------------------------------------------------------------------
-    // imageupload
+    // 'imageupload'
     // ------------------------------------------------------------------------
-    // Вы можете указать группу, которая будет использоваться при вызове run() метода:
     // $validation->run($data, 'imageupload');
-
-    // 'imageupload' - группа правил
+    // 
+    // Rules:
     public array $imageupload = [
         'images' => [
             'uploaded[images]',
@@ -88,12 +96,13 @@ class Validation extends BaseConfig
             'is_image[images]',
         ],
     ];
-
-    // Сообщения ошибок проверки для правил группы - 'imageupload'
-    public array $imageupload_errors = [
+    // 
+    // Messages:
+    public array $imageupload_errors = [ // Пользовательские сообщения ошибок проверки
         'images' => [
             'max_dims' => '..превышение максимального "1024,768" размера загружаемого файла.',
         ],
     ];
+    // << 'imageupload'
     // ------------------------------------------------------------------------
 }

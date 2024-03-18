@@ -5,37 +5,48 @@
 <div class="container">
     <h2 class="text-center mt-4 mb-4"><?= esc($title) ?></h2>
 
-    <?php if (session()->has('error') && !empty(session()->getFlashdata('error'))) : ?>
-        <div class="alert alert-danger">
-            <?php
-            echo esc(session()->getFlashdata('error'));
-            // https://codeigniter.com/user_guide/helpers/form_helper.html#validation_errors
-            // 
-            // Возвращает ошибки проверки Validation::getErrors(), хранящиеся в сеансе, 
-            // вам нужно использовать withInput() с redirect()
-            // print_r(validation_errors());     // Return type: array
-            // 
-            // Возвращает визуализированный HTML-код ошибок проверки, 
-            // используется validation_errors() внутренне, не работает с проверкой в ​​модели
-            echo validation_list_errors();   // Return type: string
-            // 
-            // Возвращает одну ошибку для указанного поля в форматированном HTML, 
-            // используется validation_errors() внутренне, не работает с проверкой в ​​модели
-            // echo validation_show_error($field); // Return type: string
-            // 
-            // Получение ошибок проверки в ​​модели: 
-            // https://codeigniter.com/user_guide/models/model.html#getting-validation-errors
-            ?>
-        </div>
-    <?php endif ?>
-    
-    <?php if (!empty($errors)) : ?>
-        <div class="alert alert-danger">
-            <?php foreach ($errors as $field => $error) : ?>
-                <p><?= esc($error) ?></p>
-            <?php endforeach ?>
-        </div>
-    <?php endif ?>
+    <?php
+    // if (session()->has('errors') && !empty(session()->getFlashdata('errors'))) {
+    //     echo '<div class="alert alert-danger">';
+        
+    //     $data_errors = esc(session()->getFlashdata('errors'));
+    //     // d(is_array($data_errors));
+    //     // d(! empty($data_errors));
+
+    //     if (is_array($data_errors) && ! empty($data_errors)) {
+    //         // if array
+    //         foreach ($data_errors as $key => $value) {
+    //             echo esc($value), '<br>'; // см. validation_list_errors();
+    //         }
+    //     }else {
+    //         // if string
+    //         echo $data_errors;
+    //     }
+
+        // https://codeigniter.com/user_guide/helpers/form_helper.html#validation_errors
+        // 
+        // Возвращает ошибки проверки Validation::getErrors(), хранящиеся в сеансе, 
+        // вам нужно использовать withInput() с redirect()
+        // print_r(validation_errors());     // Return type: array
+        // 
+        // Возвращает визуализированный HTML-код ошибок проверки, 
+        // используется validation_errors() внутренне, не работает с проверкой в ​​модели
+        // echo validation_list_errors();   // Return type: string
+        //   Отключим, т.к. здесь выводим ошибки под каждым полем формы
+        // 
+        // Возвращает одну ошибку для указанного поля в форматированном HTML, 
+        // используется validation_errors() внутренне, не работает с проверкой в ​​модели
+        // echo validation_show_error('title'); // Return type: string
+        // 
+        // Получение ошибок проверки в ​​модели: 
+        // https://codeigniter.com/user_guide/models/model.html#getting-validation-errors
+
+    //     echo '</div>';
+    // } // << -- If --
+    ?>
+
+    <?php $validation =  \Config\Services::validation(); // validation()->listErrors(); 
+    ?>
 
     <?php if (session()->has('success') && !empty(session()->getFlashdata('success'))) : ?>
         <div class="alert alert-success">
