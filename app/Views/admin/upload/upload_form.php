@@ -20,7 +20,8 @@ app/Config/Validation.php: // 'max_size[images,2048]', 'max_dims[images,1024,768
 
 
 
-<?php $validation =  \Config\Services::validation(); // validation()->listErrors(); ?>
+<?php $validation =  \Config\Services::validation(); // validation()->listErrors(); 
+?>
 
 <div class="container py-4">
     <hr>
@@ -90,7 +91,8 @@ app/Config/Validation.php: // 'max_size[images,2048]', 'max_dims[images,1024,768
 
 
 
-        <?php // Если есть ошибки: ?>
+        <?php // Если есть ошибки: 
+        ?>
 
         <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
             <div class="card rounded-0 shadow">
@@ -120,8 +122,14 @@ app/Config/Validation.php: // 'max_size[images,2048]', 'max_dims[images,1024,768
                             <div class="alert alert-danger alert-dismissible">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
                                 <!-- if (isset($errors) && ! empty($errors) && is_array($errors) && $errors !==FALSE) :  -->
-                                <?php if (!empty($errors)) {
-                                    foreach ($errors as $error) { ?><li><?= esc($error) ?></li><?php } ?><?php } ?>
+                                                    
+                                        <?php 
+                                        if (is_array($errors)) {
+                                            foreach ($errors as $error) { echo esc($error); }
+                                        } else {
+                                           echo esc($errors);
+                                        }
+                                         ?>
                             </div>
                         <?php endif; ?>
 

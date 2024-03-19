@@ -89,11 +89,11 @@ class Validation extends BaseConfig
     public array $imageupload = [
         'images' => [
             'uploaded[images]',
-            'max_size[images,4096]',
-            // 'max_dims[images,1024,768]',
-            'mime_in[images,image/jpg,image/jpeg,image/png,image/gif,image/webp]',
-            'ext_in[images,jpg,jpeg,png,gif,webp]',
             'is_image[images]',
+            'mime_in[images,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
+            'ext_in[images,jpg,jpeg,gif,png,webp]',
+            // 'max_size[images,4096]',
+            // 'max_dims[images,1024,768]',
         ],
     ];
     // 

@@ -5,31 +5,22 @@ namespace App\Controllers;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourcePresenter;
 
+use CodeIgniter\Exceptions\PageNotFoundException;
+
 use App\Entities\ProductEntity;
 use App\Models\ProductModel;
 
 class ProductController extends ResourcePresenter
 {
-    protected $model;
-    // private $session;
+    // ResourcePresenter   https://codeigniter.com/user_guide/incoming/restful.html#resourcepresenter
+    protected $modelName = ProductModel::class;
 
-    /*
-    https://www.webslesson.info/2020/10/codeigniter-4-crud-tutorial.html
-		$data['user_data'] = $crudModel->orderBy('id', 'DESC')->paginate(10);
-		$data['pagination'] = $crudModel->pager;
+    // Вы можете определить массив вспомогательных файлов как свойство класса. 
+    // Всякий раз при загрузке контроллера эти вспомогательные файлы будут автоматически 
+    // загружаться в память, так что вы сможете использовать их методы в любом месте внутри контроллера:
+    protected $helpers = ['url', 'form'];
 
-    // ? ...
-
-    */
-
-    /**
-     * constructor
-     */
-    public function __construct()
-    {
-        helper(['form', 'url']); // helper(['form', 'url', 'session']); // $this->session = session();
-        $this->model = new ProductModel();
-    }
+    private $target_dir = APPPATH . 'Views/products/';
 
     /**
      * Вывод списка
@@ -48,7 +39,11 @@ class ProductController extends ResourcePresenter
         ];
         // echo "<pre>"; var_dump($data); die;
 
-        return view('products/index', $data);
+        if (! is_file($this->target_dir . 'index' . 'php')) {
+            throw new PageNotFoundException($this->target_dir . 'index' . 'php');
+        }
+
+        return view('products/index', $data); // третий параметр очистить данные между вызовами
 
         // Api: 
         // return $this->respond($data);
@@ -74,6 +69,10 @@ class ProductController extends ResourcePresenter
             exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
         }
 
+        if (! is_file($this->target_dir . 'show' . 'php')) {
+            throw new PageNotFoundException($this->target_dir . 'show' . 'php');
+        }
+
         // View\products\show.php
         return view('products/show', $data);
 
@@ -96,6 +95,10 @@ class ProductController extends ResourcePresenter
         // Включить CSRF-фильтр 
         // для включения всех запросов POST: app/Config/Filters.php -> public $methods = ['post' => ['csrf'],];
         // Вы можете прочитать больше о защите CSRF в библиотеке безопасности https://codeigniter.com/user_guide/libraries/security.html
+
+        if (! is_file($this->target_dir . 'create' . 'php')) {
+            throw new PageNotFoundException($this->target_dir . 'create' . 'php');
+        }
 
         // View\products\create.php
         return view('products/create', ['title' => 'Create a products item']);
@@ -142,10 +145,31 @@ class ProductController extends ResourcePresenter
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections
         }
 
-        // Метод run() не сбрасывает состояние ошибки.
-        // $validation->reset();
-        // $validation->setRules($rules);
-        // if (! $validation->run($data, 'namegroup')) { ...
+
+        // Важный
+        // рекомендуем перейти на Строгие CodeIgniter\Validation\StrictRules правила.
+
+        // Сохранение наборов правил проверки в файле конфигурации
+        // https://codeigniter.com/user_guide/libraries/validation.html#saving-sets-of-validation-rules-to-the-config-file
+
+        // Примечание
+        // Проверка также может выполняться автоматически в модели, но иногда ее проще сделать в контроллере. Где решать вам.
+
+        // Setting Validation Rules
+        // https://www.codeigniter.org/user_guide/models/model.html#setting-validation-rules
+
+        // временно, если пригодится
+        // Для проверки post-данных из формы (н-р: регистрации пользователя):
+        // $validation = \Config\Services::validation();
+        // // Получить группу правил из конфигурации проверки:
+        // $rules = $validation->getRuleGroup('imageupload');
+        // $data = $this->request->getPost(array_keys($rules));
+        //// $validation->reset(); // run()метод не сбрасывает состояние ошибки. будут возвращаться все предыдущие ошибки до тех пор, пока они не будут явно сброшены. 
+        // if ($validation->run($data, 'imageupload')) {// Вы можете указать группу, которая будет использоваться при вызове run() метода
+        //     $validatedData = $validation->getValidated();
+        // }
+        // if ($validation->hasError('username')) { echo $validation->getError('username'); }// проверить, существует ли ошибка для одного поля. Если ошибок нет, будет возвращена пустая строка.
+        // $errors = $validation->getErrors();
 
         // The validation was successful.
 
@@ -224,8 +248,14 @@ class ProductController extends ResourcePresenter
                 // Если не найдено, перенаправляем обратно на страницу редактирования
                 'product'  => $this->model->getProducts($id), // ->find($id) // $model->where('id', $id)->first($id);
             ];
+
+            if (! is_file($this->target_dir . 'edit' . 'php')) {
+                throw new PageNotFoundException($this->target_dir . 'edit' . 'php');
+            }
+
             // echo "<pre>"; var_dump($data); die;
             return view('products/edit', $data); // View\products\edit.php
+
         } catch (\Throwable $t) {
             // exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
             
@@ -359,8 +389,17 @@ class ProductController extends ResourcePresenter
                 'products'  => $paginations['products'],
                 'pager'  => $paginations['pager'],
             ];
+
+            if (! is_file($this->target_dir . 'removelist' . 'php')) {
+                throw new PageNotFoundException($this->target_dir . 'removelist' . 'php');
+            }
+
             // View\products\removelist.php
             return view('products/removelist', $data);
+        }
+
+        if (! is_file($this->target_dir . 'remove' . 'php')) {
+            throw new PageNotFoundException($this->target_dir . 'remove' . 'php');
         }
 
         return view('products/remove', ['id' => $id]);
