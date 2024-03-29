@@ -39,7 +39,7 @@ class ProductController extends ResourcePresenter
         ];
         // echo "<pre>"; var_dump($data); die;
 
-        if (! is_file($this->target_dir . 'index' . 'php')) {
+        if (!is_file($this->target_dir . 'index' . 'php')) {
             throw new PageNotFoundException($this->target_dir . 'index' . 'php');
         }
 
@@ -69,7 +69,7 @@ class ProductController extends ResourcePresenter
             exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
         }
 
-        if (! is_file($this->target_dir . 'show' . 'php')) {
+        if (!is_file($this->target_dir . 'show' . 'php')) {
             throw new PageNotFoundException($this->target_dir . 'show' . 'php');
         }
 
@@ -96,7 +96,7 @@ class ProductController extends ResourcePresenter
         // для включения всех запросов POST: app/Config/Filters.php -> public $methods = ['post' => ['csrf'],];
         // Вы можете прочитать больше о защите CSRF в библиотеке безопасности https://codeigniter.com/user_guide/libraries/security.html
 
-        if (! is_file($this->target_dir . 'create' . 'php')) {
+        if (!is_file($this->target_dir . 'create' . 'php')) {
             throw new PageNotFoundException($this->target_dir . 'create' . 'php');
         }
 
@@ -122,19 +122,19 @@ class ProductController extends ResourcePresenter
         //     'content' => $this->request->getPost('content'),
         // ];
         $data = $this->request->getPost(['title', 'name', 'price', 'content']); // null, если значение не найдено
-        
+
         // Подробнее о библиотеке Validation https://codeigniter.com/user_guide/libraries/validation.html
         // Проверка в модели: https://codeigniter.com/user_guide/models/model.html#in-model-validation
         // $rules = $model->getValidationRules(['except' => ['username']]);
         // $rules = $model->getValidationRules(['only' => ['city', 'state']]);
         $rules = $this->model->getValidationRules();
-        
+
         // Проверить данные
-        if (! $this->validateData($data, $rules)) {
+        if (!$this->validateData($data, $rules)) {
             // var_export($this->validator->getErrors()); die;
             // echo validation_list_errors(); // Вывод ошибок проверки в представлении
 
-            $validate_errors=$this->validator->getErrors();
+            $validate_errors = $this->validator->getErrors();
             // Если проверка не удалась возвращаем HTML-форму.
             return redirect()->back()->withInput()->with('errors', $validate_errors); // validation_show_error('field') для вывода ошибки поля формы
             // return redirect()->back()->withInput(); // validation_show_error('field') для вывода ошибки поля формы
@@ -177,7 +177,7 @@ class ProductController extends ResourcePresenter
         $post = $this->validator->getValidated(); // getValidated: https://codeigniter.com/user_guide/libraries/validation.html#getting-validated-data
 
         $entity = new ProductEntity();
-        $entity->fill($post);        // поместить в класс массив пар ключ/значение и заполнить свойства класса
+        $entity->fill($post); // поместить в класс массив пар ключ/значение и заполнить свойства класса
         // Или тоже:
         // $entity = new ProductEntity();        
         // $entity->title   = $post['title'];
@@ -188,24 +188,16 @@ class ProductController extends ResourcePresenter
 
         // echo "<pre>"; var_dump($post); var_dump($entity); die;
 
-        // Сохранить данные
-        try { // if ($model->save($data) === false)
-            // Сохранить данные
-            $this->model->save($entity); // только поля из $allowedFields
-            // save() автоматически обрабатывает вставку или обновление, когда найден ключ, соответствующий первичному            
-        } catch (\Throwable $t) {
-            // exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
-
-            $model_errors=$this->model->errors();
-            $model_errors[] = 'Ошибки сохранения в базе данных: ' . $t->getMessage();
-            // $model_errors['message'] = 'Ошибки сохранения в базе данных: ' . $t->getMessage();
-            return redirect()->back()->withInput()->with('errors', $model_errors); // setFlashdata()
+        // Сохранить данные ( только $allowedFields )
+        if ($this->model->save($entity) === false) {
+            $data = ['errors' => $this->model->errors()];
+            // Перенаправляем обратно, сохраняя информацию об ошибках:
+            return redirect()->back()->withInput()->with('errors', $data); // setFlashdata()
         }
 
         // ID созданоого элемента
         $inserted_id = $this->model->getInsertID();
 
-        // session()->setFlashdata('success', 'Success! product created.');
         // 
         // Вернуться на страницу успеха
         // View\products\success.php
@@ -249,7 +241,7 @@ class ProductController extends ResourcePresenter
                 'product'  => $this->model->getProducts($id), // ->find($id) // $model->where('id', $id)->first($id);
             ];
 
-            if (! is_file($this->target_dir . 'edit' . 'php')) {
+            if (!is_file($this->target_dir . 'edit' . 'php')) {
                 throw new PageNotFoundException($this->target_dir . 'edit' . 'php');
             }
 
@@ -258,7 +250,7 @@ class ProductController extends ResourcePresenter
 
         } catch (\Throwable $t) {
             // exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
-            
+
             return redirect()->back()->withInput()->with('errors', sprintf('Ошибка данных с идентификатором "%d". Message: "' . $t->getMessage() . '", File: "' . $t->getFile() . '", Line: "' . $t->getLine() . '"', $id));
         }
     }
@@ -295,16 +287,16 @@ class ProductController extends ResourcePresenter
         $rules = $this->model->getValidationRules();
 
         // Проверить данные
-        if (! $this->validateData($data, $rules)) {
+        if (!$this->validateData($data, $rules)) {
             // var_export($this->validator->getErrors()); die;
             // echo validation_list_errors(); // Вывод ошибок проверки в представлении
 
-            $validate_errors=$this->validator->getErrors();
+            $validate_errors = $this->validator->getErrors();
             // Если проверка не удалась возвращаем HTML-форму.
             return redirect()->back()->withInput()->with('errors', $validate_errors); // validation_show_error('field') для вывода ошибки поля формы
             // return redirect()->back()->withInput(); // validation_show_error('field') для вывода ошибки поля формы
         }
-        
+
         // The validation was successful.
 
         // Получаем проверенные данные
@@ -330,7 +322,7 @@ class ProductController extends ResourcePresenter
         } catch (\Throwable $t) {
             // exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
 
-            $model_errors=$this->model->errors();
+            $model_errors = $this->model->errors();
             $model_errors[] = 'Ошибки сохранения в базе данных: ' . $t->getMessage();
             // $model_errors['message'] = 'Ошибки сохранения в базе данных: ' . $t->getMessage();
             return redirect()->back()->withInput()->with('errors', $model_errors); // setFlashdata()
@@ -390,7 +382,7 @@ class ProductController extends ResourcePresenter
                 'pager'  => $paginations['pager'],
             ];
 
-            if (! is_file($this->target_dir . 'removelist' . 'php')) {
+            if (!is_file($this->target_dir . 'removelist' . 'php')) {
                 throw new PageNotFoundException($this->target_dir . 'removelist' . 'php');
             }
 
@@ -398,7 +390,7 @@ class ProductController extends ResourcePresenter
             return view('products/removelist', $data);
         }
 
-        if (! is_file($this->target_dir . 'remove' . 'php')) {
+        if (!is_file($this->target_dir . 'remove' . 'php')) {
             throw new PageNotFoundException($this->target_dir . 'remove' . 'php');
         }
 

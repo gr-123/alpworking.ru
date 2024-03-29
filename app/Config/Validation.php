@@ -100,6 +100,7 @@ class Validation extends BaseConfig
     // Messages:
     public array $imageupload_errors = [ // Пользовательские сообщения ошибок проверки
         'images' => [
+            'uploaded' => 'Необходимо выбрать файлы для загрузки.',
             'max_dims' => '..превышение максимального "1024,768" размера загружаемого файла.',
         ],
     ];

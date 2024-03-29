@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var CodeIgniter\View\View $this
+*/
+?>
 <?= $this->extend('admin/dashboard/layout'); ?>
 <?= $this->section('content'); ?>
 
@@ -49,14 +54,14 @@
                 </tr>
               </thead>
               <tbody>
-                <?php if (isset($images) && !empty($images)) : ?>
+                <?php if (isset($files) && !empty($files)) : ?>
                   <?php
                   $i = 1;
-                  foreach ($images as $img) : ?>
+                  foreach ($files as $img) : ?>
                     <tr>
                       <td class="px-2 py-1 align-middle text-center"><?= number_format($i++) ?></td>
                       <td class="px-2 py-1 align-middle"><?= esc($img['id'], 'html') ?></td>
-                      <td class="px-2 py-1 align-middle"><img src="<?= esc(base_url($thumbs . '/' . $img['name']), 'attr') ?>" class="img-fluid" height="150px" /></td>
+                      <td class="px-2 py-1 align-middle"><img src="<?= esc(base_url($thumbsDir . '/' . $img['name']), 'attr') ?>" class="img-fluid" height="150px" /></td>
                       <td class="px-2 py-1 align-middle">
                         <p class="m-0 text-truncate" title="<?= esc($img['name'], 'attr') ?>"><?= esc($img['name'], 'html') ?></p>
                       </td>
@@ -68,14 +73,14 @@
                       </td>
                       <td class="px-2 py-1 align-middle text-center">
                         <!-- https://codeigniter.com/user_guide/outgoing/response.html#force-file-download -->
-                        <a href="<?= esc(base_url($thumbs . '/' . $img['name']), 'url') ?>" class="text-primary fw-bolder text-decoration-none mx-2" target="_blank" title="Download File" download="<?= esc($thumbs . '/' . $img['name'], 'attr') ?>">
+                        <a href="<?= esc(base_url($thumbsDir . '/' . $img['name']), 'url') ?>" class="text-primary fw-bolder text-decoration-none mx-2" target="_blank" title="Download File" download="<?= esc($thumbsDir . '/' . $img['name'], 'attr') ?>">
                           <i class="fa fa-download"></i>
                         </a>
                       </td>
                     </tr>
                   <?php endforeach; ?>
                 <?php endif; ?>
-                <?php if (!isset($images) || (isset($images) && count($images) <= 0)) : ?>
+                <?php if (!isset($files) || (isset($files) && count($files) <= 0)) : ?>
                   <tr>
                     <th colspan="4" class="p-1 text-center">No records found</th>
                   </tr>
@@ -93,26 +98,26 @@
 <div class="form-group col-md-6">
   <label for="formGroupExampleInput">Name</label>
   <input type="file" name="file" class="form-control" id="file" onchange="readURL(this);" accept=".png, .jpg, .jpeg" />
-</div>           
+</div>
 <div class="form-group col-md-6">
-  <img id="blah" src="#" class="" width="200" height="150"/>
-</div> 
+  <img id="blah" src="#" class="" width="200" height="150" />
+</div>
 <script>
   function readURL(input, id) {
     id = id || '#blah';
     if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            $(id)
-                    .attr('src', e.target.result)
-                    .width(200)
-                    .height(150);
-        };
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        $(id)
+          .attr('src', e.target.result)
+          .width(200)
+          .height(150);
+      };
 
-        reader.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(input.files[0]);
     }
- }
-</script> 
+  }
+</script>
 
 
 <!-- https://www.w3schools.com/jsref/met_win_open.asp

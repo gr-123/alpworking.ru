@@ -1,24 +1,42 @@
+<?php
+
+/**
+ * @var CodeIgniter\View\View $this
+ */
+?>
 <?= $this->extend('admin/dashboard/layout'); ?>
 <?= $this->section('content'); ?>
 
-<?php //echo $this->include('sidebar')
-// CodeIgniter\View\View второй параметр — массив опций, не массив данных:
-/**
- * Used within layout views to include additional views.
- * @param string     $view
- * @param array|null $options
- * @param null       $saveData
- * @return string
- */
-// public function include(string $view, array $options = null, $saveData = true): string
-// { return $this->render($view, $options, $saveData); }
-?>
-
 <?= current_url(); ?><br>
-<?= base_url('admin/image/upload'); ?>
-app/Config/Validation.php: // 'max_size[images,2048]', 'max_dims[images,1024,768]',
+<?= base_url('admin/image/upload'); ?><br>
+app/Config/Validation.php: 'max_size[images,2048]', 'max_dims[images,1024,768]',
+
+<style>
+    output#preview {
+        list-style: none;
+        margin: 25px auto;
+        padding: 0;
+        display: block;
+        max-width: 600px;
+    }
+
+    output#preview li {
+        display: inline-block;
+        margin: 0 10px 10px;
+        max-width: 100px;
+    }
+
+    output#preview li img {
+        width: 100%;
+    }
 
 
+
+    .item-photo__preview {
+        width: 150px;
+        height: 150px;
+    }
+</style>
 
 <?php $validation =  \Config\Services::validation(); // validation()->listErrors(); 
 ?>
@@ -50,13 +68,17 @@ app/Config/Validation.php: // 'max_size[images,2048]', 'max_dims[images,1024,768
                             $class_err = ' is-invalid';
                         };
                         $attributes = [
+                            'id' => 'files',
                             'name' => 'images[]',
                             // 'accept' => 'image/jpg, image/jpeg, image/png',
+                            'accept' => 'image/*',
                             'multiple' => 'multiple',
                             'class' => 'form-control' . $class_err,
                         ];
                         echo form_upload($attributes);
                         ?>
+
+                        <output id="preview"></output>
 
                         <?php if ($validation->getError('images')) : ?>
                             <div class="invalid-feedback">
@@ -122,14 +144,16 @@ app/Config/Validation.php: // 'max_size[images,2048]', 'max_dims[images,1024,768
                             <div class="alert alert-danger alert-dismissible">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
                                 <!-- if (isset($errors) && ! empty($errors) && is_array($errors) && $errors !==FALSE) :  -->
-                                                    
-                                        <?php 
-                                        if (is_array($errors)) {
-                                            foreach ($errors as $error) { echo esc($error); }
-                                        } else {
-                                           echo esc($errors);
-                                        }
-                                         ?>
+
+                                <?php
+                                if (is_array($errors)) {
+                                    foreach ($errors as $error) {
+                                        echo esc($error);
+                                    }
+                                } else {
+                                    echo esc($errors);
+                                }
+                                ?>
                             </div>
                         <?php endif; ?>
 
@@ -139,5 +163,33 @@ app/Config/Validation.php: // 'max_size[images,2048]', 'max_dims[images,1024,768
         </div>
     </div>
 </div>
+
+<script>
+    function handleFileSelect(event) {
+        // Check HTML5 File API Browser Support
+        if (typeof window.File !== 'function' || typeof window.FileList !== 'function' || typeof window.FileReader !== 'function') {
+            alert("Файловый API пока не поддерживается в этом браузере..");
+        }
+
+        var files = event.target.files; // FileList object
+        var preview = document.getElementById("preview");
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            if (!file.type.match('image')) continue;
+            var reader = new FileReader();
+            reader.addEventListener("load", function(event) {
+                var div = document.createElement("div");
+                div.innerHTML = `
+                        <img class='thumbnail' src='${event.target.result}' title='${escape(file.name)}'/>
+                        <span>${file.name}</span>
+                        `;
+                preview.insertBefore(div, null);
+            });
+            reader.readAsDataURL(file);
+        }
+    }
+
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+</script>
 
 <?= $this->endSection(); ?>

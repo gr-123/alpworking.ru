@@ -64,13 +64,12 @@
             <div class="form-group">
 
                 <?php
-                // Label:
+                // Title:
                 $title_label = [
                     'class' => 'form-label',
                     'style' => 'color: #000;',
                 ];
                 echo form_label('Title', 'title', $title_label);
-                // Input:
                 $title_input = [
                     'type'  => 'text',
                     'name'  => 'title',
@@ -90,13 +89,12 @@
 
             <div class="form-group">
                 <?php
-                // Label:
+                // Name:
                 $name_label = [
                     'class' => 'form-label',
                     'style' => '',
                 ];
                 echo form_label('Name', 'name', $name_label);
-                // Input:
                 $name_input = [
                     'type'  => 'text',
                     'name'  => 'name',
@@ -114,13 +112,12 @@
 
             <div class="form-group">
                 <?php
-                // Label:
+                // Price:
                 $price_label = [
                     'class' => 'form-label',
                     'style' => '',
                 ];
                 echo form_label('Price', 'price', $price_label);
-                // Input:
                 $price_input = [
                     'type'  => 'text',
                     'name'  => 'price',
@@ -138,13 +135,12 @@
 
             <div class="form-group">
                 <?php
-                // Label:
+                // Content:
                 $content_label = [
                     'class' => 'form-label',
                     'style' => '',
                 ];
                 echo form_label('Content', 'content', $content_label);
-                // Textarea: идентична функции form_input()
                 $content_input = [
                     'type'  => 'text',
                     'name'  => 'content',
