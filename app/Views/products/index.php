@@ -8,21 +8,22 @@
     <?php
     if (session()->has('errors') && !empty(session()->getFlashdata('errors'))) {
         echo '<div class="alert alert-danger">';
-        
+
         $data_errors = esc(session()->getFlashdata('errors'));
         // d(is_array($data_errors));
         // d(! empty($data_errors));
 
-        if (is_array($data_errors) && ! empty($data_errors)) {
+        if (is_array($data_errors) && !empty($data_errors)) {
             // if array
             foreach ($data_errors as $key => $value) {
                 echo esc($value), '<br>'; // см. validation_list_errors();
             }
-        }else {
+        } else {
             // if string
             echo $data_errors;
         }
 
+        // Получение всех ошибок: https://codeigniter4.github.io/userguide/libraries/validation.html#getting-all-errors
         // https://codeigniter.com/user_guide/helpers/form_helper.html#validation_errors
         // 
         // Возвращает ошибки проверки Validation::getErrors(), хранящиеся в сеансе, 

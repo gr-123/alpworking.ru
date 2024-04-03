@@ -8,7 +8,7 @@
     <?php
     // if (session()->has('errors') && !empty(session()->getFlashdata('errors'))) {
     //     echo '<div class="alert alert-danger">';
-        
+
     //     $data_errors = esc(session()->getFlashdata('errors'));
     //     // d(is_array($data_errors));
     //     // d(! empty($data_errors));
@@ -23,23 +23,24 @@
     //         echo $data_errors;
     //     }
 
-        // https://codeigniter.com/user_guide/helpers/form_helper.html#validation_errors
-        // 
-        // Возвращает ошибки проверки Validation::getErrors(), хранящиеся в сеансе, 
-        // вам нужно использовать withInput() с redirect()
-        // print_r(validation_errors());     // Return type: array
-        // 
-        // Возвращает визуализированный HTML-код ошибок проверки, 
-        // используется validation_errors() внутренне, не работает с проверкой в ​​модели
-        // echo validation_list_errors();   // Return type: string
-        //   Отключим, т.к. здесь выводим ошибки под каждым полем формы
-        // 
-        // Возвращает одну ошибку для указанного поля в форматированном HTML, 
-        // используется validation_errors() внутренне, не работает с проверкой в ​​модели
-        // echo validation_show_error('title'); // Return type: string
-        // 
-        // Получение ошибок проверки в ​​модели: 
-        // https://codeigniter.com/user_guide/models/model.html#getting-validation-errors
+    // Получение всех ошибок: https://codeigniter4.github.io/userguide/libraries/validation.html#getting-all-errors
+    // https://codeigniter.com/user_guide/helpers/form_helper.html#validation_errors
+    // 
+    // Возвращает ошибки проверки Validation::getErrors(), хранящиеся в сеансе, 
+    // вам нужно использовать withInput() с redirect()
+    // print_r(validation_errors());     // Return type: array
+    // 
+    // Возвращает визуализированный HTML-код ошибок проверки, 
+    // используется validation_errors() внутренне, не работает с проверкой в ​​модели
+    // echo validation_list_errors();   // Return type: string
+    //   Отключим, т.к. здесь выводим ошибки под каждым полем формы
+    // 
+    // Возвращает одну ошибку для указанного поля в форматированном HTML, 
+    // используется validation_errors() внутренне, не работает с проверкой в ​​модели
+    // echo validation_show_error('title'); // Return type: string
+    // 
+    // Получение ошибок проверки в ​​модели: 
+    // https://codeigniter.com/user_guide/models/model.html#getting-validation-errors
 
     //     echo '</div>';
     // } // << -- If --

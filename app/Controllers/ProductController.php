@@ -128,6 +128,11 @@ class ProductController extends ResourcePresenter
         // $rules = $model->getValidationRules(['except' => ['username']]);
         // $rules = $model->getValidationRules(['only' => ['city', 'state']]);
         $rules = $this->model->getValidationRules();
+        
+        // $rules = [
+        //     // @TODO
+        // ];
+        // $data = $this->request->getPost(array_keys($rules));
 
         // Проверить данные
         if (!$this->validateData($data, $rules)) {
@@ -285,6 +290,11 @@ class ProductController extends ResourcePresenter
         // $rules = $model->getValidationRules(['except' => ['username']]);
         // $rules = $model->getValidationRules(['only' => ['city', 'state']]);
         $rules = $this->model->getValidationRules();
+        
+        // $rules = [
+        //     // @TODO
+        // ];
+        // $data = $this->request->getPost(array_keys($rules));
 
         // Проверить данные
         if (!$this->validateData($data, $rules)) {
@@ -295,7 +305,38 @@ class ProductController extends ResourcePresenter
             // Если проверка не удалась возвращаем HTML-форму.
             return redirect()->back()->withInput()->with('errors', $validate_errors); // validation_show_error('field') для вывода ошибки поля формы
             // return redirect()->back()->withInput(); // validation_show_error('field') для вывода ошибки поля формы
+
+            // Redirect:
+            // https://codeigniter4.github.io/userguide/outgoing/response.html#redirect
+            // Если вы не знаете код состояния HTTP для перенаправления:
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections
         }
+
+
+        // Важный
+        // рекомендуем перейти на Строгие CodeIgniter\Validation\StrictRules правила.
+
+        // Сохранение наборов правил проверки в файле конфигурации
+        // https://codeigniter.com/user_guide/libraries/validation.html#saving-sets-of-validation-rules-to-the-config-file
+
+        // Примечание
+        // Проверка также может выполняться автоматически в модели, но иногда ее проще сделать в контроллере. Где решать вам.
+
+        // Setting Validation Rules
+        // https://www.codeigniter.org/user_guide/models/model.html#setting-validation-rules
+
+        // временно, если пригодится
+        // Для проверки post-данных из формы (н-р: регистрации пользователя):
+        // $validation = \Config\Services::validation();
+        // // Получить группу правил из конфигурации проверки:
+        // $rules = $validation->getRuleGroup('imageupload');
+        // $data = $this->request->getPost(array_keys($rules));
+        //// $validation->reset(); // run()метод не сбрасывает состояние ошибки. будут возвращаться все предыдущие ошибки до тех пор, пока они не будут явно сброшены. 
+        // if ($validation->run($data, 'imageupload')) {// Вы можете указать группу, которая будет использоваться при вызове run() метода
+        //     $validatedData = $validation->getValidated();
+        // }
+        // if ($validation->hasError('username')) { echo $validation->getError('username'); }// проверить, существует ли ошибка для одного поля. Если ошибок нет, будет возвращена пустая строка.
+        // $errors = $validation->getErrors();
 
         // The validation was successful.
 

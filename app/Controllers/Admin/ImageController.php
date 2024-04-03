@@ -8,6 +8,9 @@ use CodeIgniter\Images\Exceptions\ImageException;
 use CodeIgniter\HTTP\Exceptions\HTTPException;
 
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\Response;
+use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\HTTP\ResponseInterface;
 
 use App\Controllers\BaseController;
 use CodeIgniter\Files\File;
@@ -25,6 +28,9 @@ use App\Models\Image;
 
 class ImageController extends BaseController
 {
+    use ResponseTrait;
+
+    protected $format  = 'json';
     private $imagesDir = 'assets/images';            // каталог загрузки изображений
     private $thumbsDir = 'assets/images/thumbnails'; // каталог превью изображений
 
@@ -67,6 +73,48 @@ class ImageController extends BaseController
         return view($this->upload_form, $data);
     }
 
+
+    public function uploadImage()
+    {
+        // Retrieve $_GET and $_POST variables
+        // $request->getGet('foo');
+        // $request->getPost('foo');
+        $data = $this->upload();
+        print_r($data->getJSON());
+        /*
+ * With a request body of:
+ * {
+ *     "foo": "bar",
+ *     "fizz": {
+ *         "buzz": "baz"
+ *     }
+ * }
+ */
+
+        //  $data = $request->getJsonVar('foo');
+        // $data = "bar"
+
+        //  $data = $request->getJsonVar('fizz.buzz');
+        // $data = "baz
+
+        //  Если вы хотите, чтобы результатом был ассоциативный массив, а не объект, вы можете передать true во втором параметре:
+
+        // <?php
+
+        // With the same request as above
+        // $data = $request->getJsonVar('fizz');
+        // $data->buzz = "baz"
+
+        // $data = $request->getJsonVar('fizz', true);
+        // $data = ["buzz" => "baz"]
+
+        // d($this->upload()->getJSON() !== false);//$request->getJSON() or $request->getRawInput() 
+
+        // if (!is_file(APPPATH . 'Views/' . $this->upload_form . '.php')) { // ...(): RedirectResponse | string
+        //     throw new PageNotFoundException($this->upload_form);
+        // }
+    }
+
     /**
      * 
      * Работа с загруженными файлами
@@ -76,7 +124,7 @@ class ImageController extends BaseController
      * 
      * 
      */
-    public function uploadImage(): RedirectResponse | string
+    public function upload()
     {
         //  найти все файлы конфигурации, загруженные PHP:
         // var_dump(php_ini_loaded_file(), php_ini_scanned_files());
@@ -92,36 +140,34 @@ class ImageController extends BaseController
         // die;
         // 
 
-        if (!is_file(APPPATH . 'Views/' . $this->upload_form . '.php')) {
-            throw new PageNotFoundException($this->upload_form);
-        }
-
         // 
-        // Проверяем необходимый тип запроса (post).
+        // Only post request.
         // 
         // В предыдущих версиях вам нужно было использовать if (strtolower($this->request->getMethod()) !== 'post')
         if (!$this->request->is('post')) { // начиная с версии 4.3.0
-            log_message('info', 'Ошибка приема POST данных! Несанкционированный вход по GET-запросу.');
+            // Запрещенное действие
             $data = ['errors' => 'Ошибка приема POST данных! Несанкционированный вход по GET-запросу.'];
-            return view($this->upload_form, $data);
+            $this->fail($data);
         }
 
         // 
         // Проверяем наличие поля 'name' в post-запросе.
         // 
         if (!$this->request->getPost('images_upload')) { // <button name='images_upload' type='submit' />
-            log_message('info', 'Ошибка приема POST данных! Нет необходимого значения.');
             $data = ['errors' => 'Ошибка приема POST данных! Нет необходимого значения.'];
-            return view($this->upload_form, $data);
+            $this->fail($data);
         }
 
         // 
         // Валидация в соответствии файла конфигурации app/Config/Validation.php, группа 'imageupload'
         // 
         if (!$this->validateData([], 'imageupload')) { // true -  только в том случае, если ваши правила были успешно применены и ни одно из них не привело к сбою
-            $data = ['errors' => $this->validator->getErrors()]; // Если ошибок нет, будет возвращен пустой массив.
-            log_message('info', 'Ошибка проверки файлов: ' . implode(', ', $data['errors']));
-            return view($this->upload_form, $data);
+            // 
+            // данные, отправленные клиентом, не прошли правила проверки
+            // https://codeigniter4.github.io/CodeIgniter4/outgoing/api_responses.html#failValidationErrors
+            // 
+            $data = ['errors' => $this->validator->getErrors()];
+            return $this->failValidationErrors($data);
         }
 
         // 
@@ -181,7 +227,6 @@ class ImageController extends BaseController
         // <<--
         // --------------------------------------------------------------------
 
-
         // 
         // Перебираем все загруженные из формы файлы
         // 
@@ -191,16 +236,15 @@ class ImageController extends BaseController
             // После удаления файла временный файл удаляется. Вы можете проверить, был ли уже перемещен файл, с помощью метода hasMoved(), который 
             // возвращает логическое значение:
             if ($file->hasMoved()) {
-                // $data = ['errors' => 'Ошибка. Данный файл "$file" уже был перемещен.' . $file->getErrorString() . '(' . $file->getError() . ')'];
-                // return view($this->upload_form, $data);
-                throw HTTPException::forAlreadyMoved();
+                $data = ['errors' => 'Ошибка. Данный файл "$file" уже был перемещен.' . $file->getErrorString() . '(' . $file->getError() . ')'];
+                $this->fail($data);
+                // throw HTTPException::forAlreadyMoved();
             }
 
             // 
-            // Проверка ошибок загрузки файла
+            // Проверка ошибок загрузки файла, что действительно был загружен по HTTP без ошибок
             // 
-            if (!$file->isValid()) { //, что действительно был загружен по HTTP без ошибок
-                // throw new \RuntimeException($file->getErrorString() . '(' . $file->getError() . ')');
+            if (!$file->isValid()) {
                 // С помощью этого метода можно обнаружить следующие ошибки:
                 //  - Файл превышает вашу upload_max_filesize директиву ini.
                 //  - Файл превышает лимит загрузки, определенный в вашей форме.
@@ -209,7 +253,10 @@ class ImageController extends BaseController
                 //  - Не удалось записать файл на диск.
                 //  - Не удалось загрузить файл: отсутствует временный каталог.
                 //  - Загрузка файла была остановлена ​​расширением PHP.
-                throw HTTPException::forInvalidFile();
+                $data = ['errors' => 'Ошибка загрузки файла "$file".' . $file->getErrorString() . '(' . $file->getError() . ')'];
+                $this->fail($data);
+                // throw new \RuntimeException($file->getErrorString() . '(' . $file->getError() . ')');
+                // throw HTTPException::forInvalidFile();
             }
 
             /*
@@ -280,7 +327,9 @@ class ImageController extends BaseController
                         ->resize($this->w_thumb, $this->h_thumb, true, 'height')
                         ->save(FCPATH . $this->thumbsDir . '/' . $randomName, 10);
                 } catch (ImageException $e) {
-                    throw new ImageException($e->getMessage());
+                    $data = ['errors' => 'Ошибка создания превью изображения файла "$file".' . '(' . $e->getMessage() . ')'];
+                    $this->fail($data);
+                    // throw new ImageException($e->getMessage());
                 }
             }
 
@@ -297,8 +346,8 @@ class ImageController extends BaseController
                 //   -  файл уже перемещен
                 //   -  файл не был успешно загружен
                 //   -  операция перемещения файла завершается сбоем (например, неправильные разрешения)
-                $data = ['errors' => $e->getMessage()];
-                return view($this->upload_form, $data);
+                $data = ['errors' => 'Ошибка перемещения файла "$file".' . '(' . $e->getMessage() . ')'];
+                $this->fail($data);
             }
         }
 
@@ -306,19 +355,30 @@ class ImageController extends BaseController
         $data = [
             'files' => $saveFiles,
             'thumbsDir' => $this->thumbsDir,
-            'success' => 'Фотографии загружены! All Files Uploaded Successfully<p>Try it again!</p><h3>Your form was successfully submitted!</h3>'
+            'success' => 'Фотографии загружены! File/s uploaded Successfully.<p>Try it again!</p><h3>Your form was successfully submitted!</h3>'
         ];
 
         $saveFiles = []; // очищаем названия сохраненных файлов
 
-        if (!is_file(APPPATH . 'Views/' . $this->success_upload . '.php')) {
-            throw new PageNotFoundException($this->success_upload);
-        }
-
-        // return redirect()->to(site_url($this->upload_uri))->withInput()->with('previewImage', $filePreviewName);
-        // return redirect()->back()->with('success', $filesUploaded . ' File/s uploaded successfully.'); ?
-        return view($this->success_upload, $data);
+        return $this->respond($data);
     }
+
+    //     CodeIgniter также предоставляет класс Response , который является объектно-ориентированным представлением ответа HTTP. Это дает вам простой и мощный способ построить свой ответ клиенту:
+
+    // <?php
+
+    // use CodeIgniter\HTTP\Response;
+
+    // $response = response();
+
+    // $response->setStatusCode(Response::HTTP_OK);
+    // $response->setBody($output);
+    // $response->setHeader('Content-Type', 'text/html');
+    // $response->noCache();
+
+    // // Sends the output to the browser
+    // // This is typically handled by the framework
+    // $response->send();
 
     public function edit($id = null)
     {

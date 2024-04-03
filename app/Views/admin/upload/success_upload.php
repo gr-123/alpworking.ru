@@ -95,31 +95,6 @@
   </div>
 </div>
 
-<div class="form-group col-md-6">
-  <label for="formGroupExampleInput">Name</label>
-  <input type="file" name="file" class="form-control" id="file" onchange="readURL(this);" accept=".png, .jpg, .jpeg" />
-</div>
-<div class="form-group col-md-6">
-  <img id="blah" src="#" class="" width="200" height="150" />
-</div>
-<script>
-  function readURL(input, id) {
-    id = id || '#blah';
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        $(id)
-          .attr('src', e.target.result)
-          .width(200)
-          .height(150);
-      };
-
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-</script>
-
-
 <!-- https://www.w3schools.com/jsref/met_win_open.asp
  -->
 <!-- Откройте страницу about:blank в новом окне/вкладке:
