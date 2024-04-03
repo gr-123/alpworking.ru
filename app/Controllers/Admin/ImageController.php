@@ -241,6 +241,8 @@ class ImageController extends BaseController
                 // throw HTTPException::forAlreadyMoved();
             }
 
+            // drwx------  2 www-data www-data 45056 Apr  3 21:25 session
+            // -rw------- 1 dwsl dwsl 131 Feb 16 11:40 /var/www/alpworking.ru/writable/session/index.html
             // 
             // Проверка ошибок загрузки файла, что действительно был загружен по HTTP без ошибок
             // 
