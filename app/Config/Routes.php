@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
 use App\Controllers\Admin\AdminController;
 use App\Controllers\Admin\UsersController;
 use App\Controllers\Admin\ImageController;
+use App\Controllers\Admin\CalculatorController;
 use App\Controllers\Home;
 
 // https://codeigniter4.github.io/userguide/incoming/routing.html
@@ -60,6 +61,16 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
     // 
     $routes->get('/', [AdminController::class, 'index'], ['as' => 'admin.home']);
     $routes->get('profile', [AdminController::class, 'profile'], ['as' => 'admin.profile']);
+    $routes->get('manager', [AdminController::class, 'manager'], ['as' => 'admin.manager']);
+
+    // Calculator
+    $routes->get('calculator', [CalculatorController::class, 'index'], ['as' => 'admin.calculator']);
+    $routes->get('calculator/add', [CalculatorController::class, 'add'], ['as' => 'admin.calculator.add']);
+    $routes->post('calculator/add', [CalculatorController::class, 'add']);
+    // $routes->post('calculator/subtract', [CalculatorController::class, 'subtract'], ['as' => 'admin.calculator.subtract']);
+    // $routes->post('calculator/multiply', [CalculatorController::class, 'multiply'], ['as' => 'admin.calculator.multiply']);
+    // $routes->post('calculator/divide', [CalculatorController::class, 'divide'], ['as' => 'admin.calculator.divide']);
+
     // Upload
     $routes->get('image/upload', [ImageController::class, 'index'], ['as' => 'admin.image.upload']);
     // $routes->post('image/upload', [ImageController::class, 'index'], ['as' => 'admin.image.upload']);

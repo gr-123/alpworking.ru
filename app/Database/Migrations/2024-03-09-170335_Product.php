@@ -11,21 +11,23 @@ class Product extends Migration
     // CREATE TABLE <name_table> ...
     // -----------------------------------------------------------------------------
     // Миграция базы данных: https://codeigniter.com/user_guide/dbmgmt/migration.html
-    // php spark make:migration product            // Создать файл миграции <class> [options]
-    // // php spark make:scaffold product --suffix // { Controller.php,Model.php,Migration.php,Seeder.php }
+    // php spark make:migration product         // Создать файл миграции <class> [options]
+    // или
+    // php spark make:scaffold product --suffix // Controller.php,Model.php,Migration.php,Seeder.php
     // php spark migrate:status
-    // php spark migrate              // Запуск миграции
+    // DELETE FROM "migrations" WHERE "id"=...  // если затем удалить таблицу, тогда также необходимо удалить запись из таблицы миграций
+    // php spark migrate                        // Запуск миграции
 
     // INSERT INTO <name_table> VALUES ...
     // -----------------------------------------------------------------------------
-    // php spark make:seeder product --suffix // Создать файл для внесения данных в базу данных
-    // php spark db:seed ProductSeeder        // Запуск
+    // php spark make:seeder product --suffix   // Создать файл для внесения данных в базу данных
+    // php spark db:seed ProductSeeder          // Запуск
     // 
     // $seeder = \Config\Database::seeder();
     // $seeder->call('ProductSeeder');
     // 
-    // php spark db:table products --limit-rows 50 --limit-field-value 20 --desc // И проверьте таблицу
     // php spark db:table products --metadata
+    // php spark db:table products --limit-rows 50 --limit-field-value 20 --desc // И проверьте таблицу
     // 
     // $db = \Config\Database::connect();
     // $insertQuery = "INSERT INTO table_name (column1, column2, ...) VALUES (value1, value2, value3, ...)";

@@ -26,29 +26,34 @@ class AdminController extends BaseController
         $user = $users->findById(1);
 
         $entity = array();
-        $entity['groups']= $user->getGroups();
-        $entity['permissions']= $user->getPermissions();
-        
-		$data = [
-			'pageTitle' => "Home",
-			'entity' => $entity
-		];
+        $entity['groups'] = $user->getGroups();
+        $entity['permissions'] = $user->getPermissions();
 
-		return view('admin/dashboard/home', $data);
+        $data = [
+            'pageTitle' => "Home",
+            'entity' => $entity
+        ];
+
+        return view('admin/dashboard/home', $data);
     }
 
     public function profile()
     {
-		$data['pageTitle']='Profile';
-		return view('admin/dashboard/profile', $data);
+        $data['pageTitle'] = 'Profile';
+        return view('admin/dashboard/profile', $data);
+    }
+    public function manager()
+    {
+        $data['pageTitle'] = 'Manager';
+        return view('admin/dashboard/manager', $data);
     }
 
     public function upload()
     {
-		$data['pageTitle']='Upload';
-		return view('admin/dashboard/upload', $data);
+        $data['pageTitle'] = 'Upload';
+        return view('admin/dashboard/upload', $data);
     }
-    
+
     // войти в систему, используя свой адрес электронной почты и пароль
     public function loginAttempt()
     {
@@ -65,7 +70,7 @@ class AdminController extends BaseController
             'email'    => $this->request->getPost('email'),
             'password' => $this->request->getPost('password')
         ];
-        
+
         // check()
         // Если вы хотите проверить учетные данные пользователя, не входя в систему
         // $validCreds = auth()->check($credentials); // Возвращенный экземпляр Result
@@ -74,9 +79,9 @@ class AdminController extends BaseController
         $result = auth()->attempt($credentials); // Возвращенный объект Response
 
         // Вход в систему фиксируется и записывается в таблицу 'auth_logins', независимо от результата.
-        
+
         // Если попытка не удалась, запускается событие неудачного входа в систему с массивом учетных данных в качестве единственного параметра
-        if (! $result->isOK()) {
+        if (!$result->isOK()) {
             return redirect()->back()->with('error', $result->reason());
         }
 
@@ -115,7 +120,7 @@ class AdminController extends BaseController
         //Изменение поля в таблице
         // https://codeigniter4.github.io/CodeIgniter4/dbmgmt/forge.html#modifying-a-field-in-a-table
     }
-    
+
     public function editTable()
     {
         // вопрос: как я могу сохранить значения пола , имени , фамилии и... в базе данных помимо адреса электронной почты, имени пользователя и пароля на странице регистрации.
@@ -160,7 +165,7 @@ class AdminController extends BaseController
         //     'password'         => 'required|strong_password',
         //     'password_confirm' => 'required|matches[password]',
         // ];
-        
+
         // Сделайте то же самое для других полей.
         // Правильно ли я понял ваш вопрос и был ли ответ полным?
         // да, это работа. спасибо

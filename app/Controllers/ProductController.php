@@ -39,8 +39,8 @@ class ProductController extends ResourcePresenter
         ];
         // echo "<pre>"; var_dump($data); die;
 
-        if (!is_file($this->target_dir . 'index' . 'php')) {
-            throw new PageNotFoundException($this->target_dir . 'index' . 'php');
+        if (!is_file($this->target_dir . 'index' . '.' . 'php')) {
+            throw new PageNotFoundException($this->target_dir . 'index' . '.' . 'php');
         }
 
         return view('products/index', $data); // третий параметр очистить данные между вызовами
@@ -69,8 +69,8 @@ class ProductController extends ResourcePresenter
             exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
         }
 
-        if (!is_file($this->target_dir . 'show' . 'php')) {
-            throw new PageNotFoundException($this->target_dir . 'show' . 'php');
+        if (!is_file($this->target_dir . 'show' . '.' . 'php')) {
+            throw new PageNotFoundException($this->target_dir . 'show' . '.' . 'php');
         }
 
         // View\products\show.php
@@ -96,8 +96,8 @@ class ProductController extends ResourcePresenter
         // для включения всех запросов POST: app/Config/Filters.php -> public $methods = ['post' => ['csrf'],];
         // Вы можете прочитать больше о защите CSRF в библиотеке безопасности https://codeigniter.com/user_guide/libraries/security.html
 
-        if (!is_file($this->target_dir . 'create' . 'php')) {
-            throw new PageNotFoundException($this->target_dir . 'create' . 'php');
+        if (!is_file($this->target_dir . 'create' . '.' . 'php')) {
+            throw new PageNotFoundException($this->target_dir . 'create' . '.' . 'php');
         }
 
         // View\products\create.php
@@ -246,8 +246,8 @@ class ProductController extends ResourcePresenter
                 'product'  => $this->model->getProducts($id), // ->find($id) // $model->where('id', $id)->first($id);
             ];
 
-            if (!is_file($this->target_dir . 'edit' . 'php')) {
-                throw new PageNotFoundException($this->target_dir . 'edit' . 'php');
+            if (!is_file($this->target_dir . 'edit' . '.' . 'php')) {
+                throw new PageNotFoundException($this->target_dir . 'edit' . '.' . 'php');
             }
 
             // echo "<pre>"; var_dump($data); die;
@@ -423,16 +423,16 @@ class ProductController extends ResourcePresenter
                 'pager'  => $paginations['pager'],
             ];
 
-            if (!is_file($this->target_dir . 'removelist' . 'php')) {
-                throw new PageNotFoundException($this->target_dir . 'removelist' . 'php');
+            if (!is_file($this->target_dir . 'removelist' . '.' . 'php')) {
+                throw new PageNotFoundException($this->target_dir . 'removelist' . '.' . 'php');
             }
 
             // View\products\removelist.php
             return view('products/removelist', $data);
         }
 
-        if (!is_file($this->target_dir . 'remove' . 'php')) {
-            throw new PageNotFoundException($this->target_dir . 'remove' . 'php');
+        if (!is_file($this->target_dir . 'remove' . '.' . 'php')) {
+            throw new PageNotFoundException($this->target_dir . 'remove' . '.' . 'php');
         }
 
         return view('products/remove', ['id' => $id]);

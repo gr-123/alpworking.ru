@@ -1,3 +1,9 @@
+<?php
+
+/**
+ * @var CodeIgniter\View\View $this
+ */
+?>
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('title') ?>Create Product<?= $this->endSection() ?>
 <?= $this->section('content') ?>

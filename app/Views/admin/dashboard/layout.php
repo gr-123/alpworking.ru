@@ -220,6 +220,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="<?= route_to('admin.manager'); ?>" class="nav-link <?= (current_url() == base_url('admin/manager')) ? 'active' : ''; ?>">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Manager
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

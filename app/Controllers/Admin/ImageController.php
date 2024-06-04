@@ -43,16 +43,7 @@ class ImageController extends BaseController
     private $uploaded_bool = true;  // обязательно ли загружать файлы
     private $thumbs_bool = true;    // обязательно ли создавать уменьшенные копии изображений
 
-    private $imageModel;                                     // Image Model
     protected $helpers = ['url', 'form'];
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->imageModel = new Image; // https://codeigniter.com/user_guide/models/model.html
-    }
 
     /**
      * Return image upload view
@@ -76,43 +67,48 @@ class ImageController extends BaseController
 
     public function uploadImage()
     {
-        // Retrieve $_GET and $_POST variables
-        // $request->getGet('foo');
-        // $request->getPost('foo');
-        $data = $this->upload();
-        print_r($data->getJSON());
-        /*
- * With a request body of:
- * {
- *     "foo": "bar",
- *     "fizz": {
- *         "buzz": "baz"
- *     }
- * }
- */
+        try {
+            $files_upload = $this->upload();
+            // dd($files_upload);
+            
+        } catch (Throwable $t) {
+            exit('<pre>' . $t->getMessage() . '<br>' . $t->getFile() . ', Line: ' . $t->getLine() . '<br><br>Trace:<br>' . $t->getTraceAsString());
+            // return redirect()->back()->withInput()->with('errors', 'Ошибки API загрузки файлов: ' . $t->getMessage()); // setFlashdata()
+        }
 
-        //  $data = $request->getJsonVar('foo');
-        // $data = "bar"
+            $json = $files_upload->getJSON();
+            // d($json);
+            // if (strpos($response->header('content-type'), 'application/json') !== false) {
+            //     $body = json_decode($body);
+            // }
+            $data = json_decode($json, true);
+            // dd($data);
+            
+//         $response = response();
+// $response->setStatusCode(Response::HTTP_OK);
+// $response->setBody($json);//Ожидается, что аргумент '1', передаваемый в setBody(), будет иметь строковый тип, заданный CodeIgniter\HTTP\ResponseInterface.
+// $response->setHeader('Content-Type', 'text/html');
+// $response->noCache();
 
-        //  $data = $request->getJsonVar('fizz.buzz');
-        // $data = "baz
+// Sends the output to the browser
+// This is typically handled by the framework
+// $response->send();
 
-        //  Если вы хотите, чтобы результатом был ассоциативный массив, а не объект, вы можете передать true во втором параметре:
+        if (!is_file(APPPATH . 'Views/' . $this->upload_form . '.php')) { // ...(): RedirectResponse | string
+            throw new PageNotFoundException($this->upload_form);
+        }
 
-        // <?php
-
-        // With the same request as above
-        // $data = $request->getJsonVar('fizz');
-        // $data->buzz = "baz"
-
-        // $data = $request->getJsonVar('fizz', true);
-        // $data = ["buzz" => "baz"]
-
-        // d($this->upload()->getJSON() !== false);//$request->getJSON() or $request->getRawInput() 
-
-        // if (!is_file(APPPATH . 'Views/' . $this->upload_form . '.php')) { // ...(): RedirectResponse | string
-        //     throw new PageNotFoundException($this->upload_form);
-        // }
+        $this->response->setContentType('application/json');
+        // echo $json;
+        // $this->response->setContentType('text/html');
+        // $this->response->setContentType('text/plain');
+        echo $json;
+        // return view($this->upload_form, json_decode($json, true), ['debug' => false]);
+        // $data = [
+        //     'pageTitle' => 'Upload - Загрузка нескольких файлов',
+        //     'errors' => [],
+        // ];
+        // return view($this->success_upload, $data);
     }
 
     /**
@@ -236,13 +232,12 @@ class ImageController extends BaseController
             // После удаления файла временный файл удаляется. Вы можете проверить, был ли уже перемещен файл, с помощью метода hasMoved(), который 
             // возвращает логическое значение:
             if ($file->hasMoved()) {
-                $data = ['errors' => 'Ошибка. Данный файл "$file" уже был перемещен.' . $file->getErrorString() . '(' . $file->getError() . ')'];
-                $this->fail($data);
-                // throw HTTPException::forAlreadyMoved();
+                // $data = ['errors' => 'Ошибка. Данный файл "$file" уже был перемещен.' . $file->getErrorString() . '(' . $file->getError() . ')'];
+                // $this->fail($data);
+
+                throw HTTPException::forAlreadyMoved();
             }
 
-            // drwx------  2 www-data www-data 45056 Apr  3 21:25 session
-            // -rw------- 1 dwsl dwsl 131 Feb 16 11:40 /var/www/alpworking.ru/writable/session/index.html
             // 
             // Проверка ошибок загрузки файла, что действительно был загружен по HTTP без ошибок
             // 
@@ -255,10 +250,11 @@ class ImageController extends BaseController
                 //  - Не удалось записать файл на диск.
                 //  - Не удалось загрузить файл: отсутствует временный каталог.
                 //  - Загрузка файла была остановлена ​​расширением PHP.
-                $data = ['errors' => 'Ошибка загрузки файла "$file".' . $file->getErrorString() . '(' . $file->getError() . ')'];
-                $this->fail($data);
+                // $data = ['errors' => 'Ошибка загрузки файла "$file".' . $file->getErrorString() . '(' . $file->getError() . ')'];
+                // $this->fail($data);
+
                 // throw new \RuntimeException($file->getErrorString() . '(' . $file->getError() . ')');
-                // throw HTTPException::forInvalidFile();
+                throw HTTPException::forInvalidFile();
             }
 
             /*
@@ -329,9 +325,10 @@ class ImageController extends BaseController
                         ->resize($this->w_thumb, $this->h_thumb, true, 'height')
                         ->save(FCPATH . $this->thumbsDir . '/' . $randomName, 10);
                 } catch (ImageException $e) {
-                    $data = ['errors' => 'Ошибка создания превью изображения файла "$file".' . '(' . $e->getMessage() . ')'];
-                    $this->fail($data);
-                    // throw new ImageException($e->getMessage());
+                    // $data = ['errors' => 'Ошибка создания превью изображения файла "$file".' . '(' . $e->getMessage() . ')'];
+                    // $this->fail($data);
+
+                    throw new ImageException($e->getMessage());
                 }
             }
 
@@ -348,8 +345,10 @@ class ImageController extends BaseController
                 //   -  файл уже перемещен
                 //   -  файл не был успешно загружен
                 //   -  операция перемещения файла завершается сбоем (например, неправильные разрешения)
-                $data = ['errors' => 'Ошибка перемещения файла "$file".' . '(' . $e->getMessage() . ')'];
-                $this->fail($data);
+                // $data = ['errors' => 'Ошибка перемещения файла "$file".' . '(' . $e->getMessage() . ')'];
+                // $this->fail($data);
+
+                throw new HTTPException($e->getMessage());
             }
         }
 
@@ -409,19 +408,19 @@ class ImageController extends BaseController
 
 
     // https://stackoverflow.com/questions/73558358/how-to-display-uploaded-file-from-writable-uploads-in-codeigniter-4
-    public function showFile()
-    {
-        helper("filesystem");
-        $path = WRITEPATH . 'uploads/';
-        $filename = 'logo-at.png';
+    // public function showFile()
+    // {
+    //     helper("filesystem");
+    //     $path = WRITEPATH . 'uploads/';
+    //     $filename = 'logo-at.png';
 
-        $fullpath = $path . $filename;
-        $file = new \CodeIgniter\Files\File($fullpath, true);
-        $binary = readfile($fullpath);
-        return $this->response
-            ->setHeader('Content-Type', $file->getMimeType())
-            ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
-            ->setStatusCode(200)
-            ->setBody($binary);
-    }
+    //     $fullpath = $path . $filename;
+    //     $file = new \CodeIgniter\Files\File($fullpath, true);
+    //     $binary = readfile($fullpath);
+    //     return $this->response
+    //         ->setHeader('Content-Type', $file->getMimeType())
+    //         ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
+    //         ->setStatusCode(200)
+    //         ->setBody($binary);
+    // }
 }

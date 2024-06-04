@@ -1,3 +1,9 @@
+<?php
+
+/**
+ * @var CodeIgniter\View\View $this
+ */
+?>
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('title') ?>Edit Product<?= $this->endSection() ?>
 <?= $this->section('content') ?>
@@ -67,12 +73,12 @@
 
                 <?php
                 // Title:
-                $title_label = [
+                $title_label_attr_attr = [
                     'class' => 'form-label',
                     'style' => 'color: #000;',
                 ];
-                echo form_label('Title', 'title', $title_label);
-                $title_input = [
+                echo form_label('Title', 'title', $title_label_attr_attr);
+                $title_input_attr = [
                     'type'  => 'text',
                     'name'  => 'title',
                     'id'    => '',
@@ -81,7 +87,7 @@
                     'class' => 'form-control',
                     'placeholder' => 'uniq'
                 ];
-                echo form_input($title_input); ?>
+                echo form_input($title_input_attr); ?>
                 <?php if (validation_show_error('title')) : ?>
                     <div class="alert alert-danger mt-2">
                         <?= validation_show_error('title') ?>
@@ -92,19 +98,19 @@
             <div class="form-group">
                 <?php
                 // Name:
-                $name_label = [
+                $name_label_attr = [
                     'class' => 'form-label',
                     'style' => '',
                 ];
-                echo form_label('Name', 'name', $name_label);
-                $name_input = [
+                echo form_label('Name', 'name', $name_label_attr);
+                $name_input_attr = [
                     'type'  => 'text',
                     'name'  => 'name',
                     'id'    => '',
                     'value' => set_value('name', $product->name),
                     'class' => 'form-control',
                 ];
-                echo form_input($name_input); ?>
+                echo form_input($name_input_attr); ?>
                 <?php if (validation_show_error('name')) : ?>
                     <div class="alert alert-danger mt-2">
                         <?= validation_show_error('name') ?>
@@ -115,19 +121,19 @@
             <div class="form-group">
                 <?php
                 // Price:
-                $price_label = [
+                $price_label_attr = [
                     'class' => 'form-label',
                     'style' => '',
                 ];
-                echo form_label('Price', 'price', $price_label);
-                $price_input = [
+                echo form_label('Price', 'price', $price_label_attr);
+                $price_input_attr = [
                     'type'  => 'text',
                     'name'  => 'price',
                     'id'    => '',
                     'value' => set_value('price', $product->price),
                     'class' => 'form-control',
                 ];
-                echo form_input($price_input); ?>
+                echo form_input($price_input_attr); ?>
                 <?php if (validation_show_error('price')) : ?>
                     <div class="alert alert-danger mt-2">
                         <?= validation_show_error('price') ?>
@@ -138,12 +144,12 @@
             <div class="form-group">
                 <?php
                 // Content:
-                $content_label = [
+                $content_label_attr_attr = [
                     'class' => 'form-label',
                     'style' => '',
                 ];
-                echo form_label('Content', 'content', $content_label);
-                $content_input = [
+                echo form_label('Content', 'content', $content_label_attr_attr);
+                $content_input_attr = [
                     'type'  => 'text',
                     'name'  => 'content',
                     'id'    => '',
@@ -152,7 +158,7 @@
                     'cols' => '45',
                     'rows' => '4',
                 ];
-                echo form_textarea($content_input); ?>
+                echo form_textarea($content_input_attr); ?>
                 <!-- имя поля первый параметр. Второй (необязательный) значение по умолчанию Третий (необязательный) параметр позволяет отключить HTML-экранирование значения и избежать двойного экранирования. -->
                 <?php if (validation_show_error('content')) : ?>
                     <div class="alert alert-danger mt-2">
