@@ -111,10 +111,7 @@ return $this->respond($subcategories);
 
     public function index()
     {
-        // $data['news'] = $model->getNews();
-
-        $data['pageTitle'] = 'Calculator';
-        return view('admin/calculator/index');
+        // 
     }
 
     // Действие сложения.
@@ -142,10 +139,6 @@ return $this->respond($subcategories);
             return view('admin/calculator/add');
         }
 
-        $model = model(PricesModel::class);
-        // все позиции прайса в базе данных для категории "Герметизация м.п. швов"
-        // $price = $model->where(['category_id' => '1'])->findAll();
-
         // Post-запрос. Вычисляем данные запроса.
         $post_data = $this->request->getPost();
         // $this->request->getPost('value'); // null, если элемент не существует
@@ -154,6 +147,10 @@ return $this->respond($subcategories);
 
         // Стоимость работ (без стоимости матрериалов)
         $data['ans'] = 0;
+
+        $model = model(PricesModel::class);
+        // все позиции прайса в базе данных для категории "Герметизация м.п. швов"
+        // $price = $model->where(['category_id' => '1'])->findAll();
 
         // себестоимость одного п.м. материала
         foreach ($post_data as $item) {
@@ -178,8 +175,8 @@ return $this->respond($subcategories);
                     $val = $model->where(['category_id' => '1', 'name' => 'primer'])->first();
                     $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
                     break;
-                case "sverlenie":
-                    $val = $model->where(['category_id' => '1', 'name' => 'sverlenie'])->first();
+                case "drilling":
+                    $val = $model->where(['category_id' => '1', 'name' => 'drilling'])->first();
                     $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
                     break;
                 case "germ1": // 1-комп.герметик

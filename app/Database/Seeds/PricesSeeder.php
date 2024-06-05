@@ -20,7 +20,7 @@ class PricesSeeder extends Seeder
             ['category_id' => '1', 'name' => 'snyatie_sctch_lenta1', 'amount' => '40',],
             ['category_id' => '1', 'name' => 'snyatie_sctch_lenta2', 'amount' => '70',],
             ['category_id' => '1', 'name' => 'primer', 'amount' => '55',],
-            ['category_id' => '1', 'name' => 'sverlenie', 'amount' => '480',],
+            ['category_id' => '1', 'name' => 'drilling', 'amount' => '480',],
         ];
 
 		foreach($data as $item){

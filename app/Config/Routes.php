@@ -8,6 +8,8 @@ use App\Controllers\Admin\AdminController;
 use App\Controllers\Admin\UsersController;
 use App\Controllers\Admin\ImageController;
 use App\Controllers\Admin\CalculatorController;
+use App\Controllers\Admin\SealingpriceController;
+use App\Controllers\Admin\WindowcleaningpriceController;
 use App\Controllers\Home;
 
 // https://codeigniter4.github.io/userguide/incoming/routing.html
@@ -62,20 +64,28 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
     $routes->get('/', [AdminController::class, 'index'], ['as' => 'admin.home']);
     $routes->get('profile', [AdminController::class, 'profile'], ['as' => 'admin.profile']);
     $routes->get('manager', [AdminController::class, 'manager'], ['as' => 'admin.manager']);
-
-    // Calculator
-    $routes->get('calculator', [CalculatorController::class, 'index'], ['as' => 'admin.calculator']);
-    $routes->get('calculator/add', [CalculatorController::class, 'add'], ['as' => 'admin.calculator.add']);
-    $routes->post('calculator/add', [CalculatorController::class, 'add']);
-    // $routes->post('calculator/subtract', [CalculatorController::class, 'subtract'], ['as' => 'admin.calculator.subtract']);
-    // $routes->post('calculator/multiply', [CalculatorController::class, 'multiply'], ['as' => 'admin.calculator.multiply']);
-    // $routes->post('calculator/divide', [CalculatorController::class, 'divide'], ['as' => 'admin.calculator.divide']);
+    $routes->get('calculator', [AdminController::class, 'calculator'], ['as' => 'admin.calculator']);
+    $routes->get('prices', [AdminController::class, 'prices'], ['as' => 'admin.prices']);
 
     // Upload
     $routes->get('image/upload', [ImageController::class, 'index'], ['as' => 'admin.image.upload']);
     // $routes->post('image/upload', [ImageController::class, 'index'], ['as' => 'admin.image.upload']);
     $routes->post('image/upload', [ImageController::class, 'uploadImage'], ['as' => 'admin.image.upload']);
     $routes->post('image/delete', [ImageController::class, 'delete'], ['as' => 'admin.image.delete']);
+
+    // Calculator
+    $routes->get('calculator/add', [CalculatorController::class, 'add'], ['as' => 'admin.calculator.add']);
+    $routes->post('calculator/add', [CalculatorController::class, 'add']);
+    // 
+    // $routes->post('calculator/subtract', [CalculatorController::class, 'subtract'], ['as' => 'admin.calculator.subtract']);
+    // $routes->post('calculator/multiply', [CalculatorController::class, 'multiply'], ['as' => 'admin.calculator.multiply']);
+    // $routes->post('calculator/divide', [CalculatorController::class, 'divide'], ['as' => 'admin.calculator.divide']);
+
+    // Prices
+    $routes->get('prices/sealing', [SealingpriceController::class, 'index'], ['as' => 'admin.prices.sealing']);
+    $routes->get('prices/sealing/update', [SealingpriceController::class, 'update']);
+    $routes->post('prices/sealing/update', [SealingpriceController::class, 'update']);
+    // $routes->get('prices/window_cleaning', [WindowcleaningpriceController::class, 'index'], ['as' => 'admin.prices.window_cleaning']);
 
     // $routes->post('adduser', 'AdminController::adduser'); // /admin/adduser // $this->request->getPost()
     // $routes->match(["get", "post"], 'namemethod', 'AdminController::namemethod');

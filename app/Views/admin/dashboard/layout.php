@@ -228,6 +228,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="<?= route_to('admin.calculator'); ?>" class="nav-link <?= (current_url() == base_url('admin/calculator')) ? 'active' : ''; ?>">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Calculator
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= route_to('admin.prices'); ?>" class="nav-link <?= (current_url() == base_url('admin/prices')) ? 'active' : ''; ?>">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Prices
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

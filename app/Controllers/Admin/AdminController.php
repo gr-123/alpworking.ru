@@ -42,16 +42,26 @@ class AdminController extends BaseController
         $data['pageTitle'] = 'Profile';
         return view('admin/dashboard/profile', $data);
     }
-    public function manager()
-    {
-        $data['pageTitle'] = 'Manager';
-        return view('admin/dashboard/manager', $data);
-    }
 
     public function upload()
     {
         $data['pageTitle'] = 'Upload';
         return view('admin/dashboard/upload', $data);
+    }
+    public function manager()
+    {
+        $data['pageTitle'] = 'Manager';
+        return view('admin/dashboard/manager', $data);
+    }
+    public function calculator()
+    {
+        $data['pageTitle'] = 'Calculator';
+        return view('admin/dashboard/calculator', $data);
+    }
+    public function prices()
+    {
+        $data['pageTitle'] = 'Prices';
+        return view('admin/dashboard/prices', $data);
     }
 
     // войти в систему, используя свой адрес электронной почты и пароль

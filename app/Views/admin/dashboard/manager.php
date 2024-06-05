@@ -7,10 +7,11 @@
 <?= $this->extend('admin/dashboard/layout'); ?>
 <?= $this->section('content'); ?>
 
+TODO:
+<br>Вывод и редактирование категорий для прайса
+<br>Создание новостей https://codeigniter.com/user_guide/tutorial/create_news_items.html
 <br>
-<a href="<?= base_url('admin/calculator') ?>" class="btn btn-success">Calculator</a>
-
-
+<br>
 
 <br>
 <br>
