@@ -74,8 +74,8 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
     $routes->post('image/delete', [ImageController::class, 'delete'], ['as' => 'admin.image.delete']);
 
     // Calculator
-    $routes->get('calculator/add', [CalculatorController::class, 'add'], ['as' => 'admin.calculator.add']);
-    $routes->post('calculator/add', [CalculatorController::class, 'add']);
+    $routes->get('calculator/sealing', [CalculatorController::class, 'sealing'], ['as' => 'admin.calculator.sealing']);
+    $routes->post('calculator/sealing', [CalculatorController::class, 'sealing']);
     // 
     // $routes->post('calculator/subtract', [CalculatorController::class, 'subtract'], ['as' => 'admin.calculator.subtract']);
     // $routes->post('calculator/multiply', [CalculatorController::class, 'multiply'], ['as' => 'admin.calculator.multiply']);

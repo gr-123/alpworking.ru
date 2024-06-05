@@ -29,6 +29,9 @@
 </style>
 
 <div class="container col-md-3 col-md-offset-4 weli">
+    <a href="<?= route_to('admin.prices'); ?>">
+        <p>Prices</p>
+    </a>
 
     <?php
     // Успешный ответ обновления цен прайс-листа при перенаправлении из метода контроллера update()

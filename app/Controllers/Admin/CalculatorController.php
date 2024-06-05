@@ -116,7 +116,7 @@ return $this->respond($subcategories);
 
     // Действие сложения.
     // get|post
-    public function add()
+    public function sealing()
     {
         // foreach ($_POST as $element) { if (is_numeric($element)) { echo var_export($element, true) . " число", PHP_EOL; } else {echo var_export($element, true) . " НЕ число", PHP_EOL; } }
 
@@ -133,10 +133,23 @@ return $this->respond($subcategories);
         // возвращают значение null, если элемент не существует
         // позволяет удобно использовать данные без необходимости предварительно проверять, существует ли элемент
 
+        $data = array();
+        $priceModel = model(PricesModel::class);
+        // все позиции прайса в базе данных для категории "Герметизация м.п. швов"
+        $price = $priceModel->where(['category_id' => '1'])->findAll(); // Значение возвращается в формате, указанном в $returnType .
+
+        foreach ($price as $value) {
+            $data[$value->name] = $value->amount;
+            // echo '<pre>', '...: '; var_dump($value->name, $value->amount); die;
+        }
+
         // Определение типа запроса
         // Если не post-запрос, тогда открываем страницу калькулятора
         if (!$this->request->is('post')) {
-            return view('admin/calculator/add');
+            $data['pageTitle'] = 'Составление (подсчет) стоимости работ по герметизации м.п. швов (без стоимости материалов)';
+
+
+            return view('admin/calculator/sealing', $data);
         }
 
         // Post-запрос. Вычисляем данные запроса.
@@ -155,6 +168,14 @@ return $this->respond($subcategories);
         // себестоимость одного п.м. материала
         foreach ($post_data as $item) {
             switch ($item) {
+                case "germ1": // 1-комп.герметик
+                    $val = $model->where(['category_id' => '1', 'name' => 'germ1'])->first();
+                    $data['ans'] = intval($data['ans']) * $val->amount; // арифметическое действие калькулятора
+                    break;
+                case "germ2": // 2-комп.герметик
+                    $val = $model->where(['category_id' => '1', 'name' => 'germ2'])->first();
+                    $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
+                    break;
                 case "vilaterm": // вилатерм
                     $val = $model->where(['category_id' => '1', 'name' => 'vilaterm'])->first();
                     $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
@@ -163,8 +184,12 @@ return $this->respond($subcategories);
                     $val = $model->where(['category_id' => '1', 'name' => 'pena'])->first();
                     $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
                     break;
-                case "breakdown": // разбивка межпанельного шва
+                case "breakdown": // С разбивкой межпанельных швов
                     $val = $model->where(['category_id' => '1', 'name' => 'breakdown'])->first();
+                    $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
+                    break;
+                case "drilling": // Через сверление отверстий
+                    $val = $model->where(['category_id' => '1', 'name' => 'drilling'])->first();
                     $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
                     break;
                 case "sctch_lenta": // скотч лента
@@ -175,22 +200,6 @@ return $this->respond($subcategories);
                     $val = $model->where(['category_id' => '1', 'name' => 'primer'])->first();
                     $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
                     break;
-                case "drilling":
-                    $val = $model->where(['category_id' => '1', 'name' => 'drilling'])->first();
-                    $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
-                    break;
-                case "germ1": // 1-комп.герметик
-                    $val = $model->where(['category_id' => '1', 'name' => 'germ1'])->first();
-                    $data['ans'] = intval($data['ans']) * $val->amount; // арифметическое действие калькулятора
-                    break;
-                case "germ2": // 2-комп.герметик
-                    $val = $model->where(['category_id' => '1', 'name' => 'germ2'])->first();
-                    $data['ans'] = intval($data['ans']) + $val->amount; // арифметическое действие калькулятора
-                    break;
-                    //     case "breakdown": // С разбивкой швов
-                    //         break;
-                    //     case "drilling": // Через сверление отверстий
-                    //         break;
             }
         }
 
@@ -223,7 +232,7 @@ return $this->respond($subcategories);
 
         // $data['ans'] // итоговая стоимость работ (без учета стоим. материалов)
 
-        return view('admin/calculator/add', $data);
+        return view('admin/calculator/sealing', $data);
     }
 
     protected function calculate($num1, $num2, $num3)
