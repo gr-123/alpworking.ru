@@ -4,23 +4,24 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CategoriesModel extends Model
+// php spark make:model SealingImages --suffix --return entity
+class SealingImagesModel extends Model
 {
-    protected $table            = 'categories';
+    protected $table            = 'sealing_images';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = \App\Entities\CategoriesEntity::class;
+    protected $returnType       = \App\Entities\SealingImagesEntity::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
-        'title',
+        'caption',
     ];
 
     protected bool $allowEmptyInserts = false;
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

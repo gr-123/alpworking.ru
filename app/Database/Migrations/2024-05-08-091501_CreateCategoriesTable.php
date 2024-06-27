@@ -11,6 +11,7 @@ class CreateCategoriesTable extends Migration
         $fields = [
             'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'name'        => ['type' => 'VARCHAR', 'constraint' => 255],
+            'title'       => ['type' => 'VARCHAR', 'constraint' => 255],
             'created_at'  => ['type' => 'datetime', 'null' => true],
             'updated_at'  => ['type' => 'datetime', 'null' => true],
             'deleted_at'  => ['type' => 'datetime', 'null' => true],

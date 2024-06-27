@@ -9,8 +9,8 @@ class CategoriesSeeder extends Seeder
     public function run()
     {
         $data = [
-            ['name'    => 'sealing',],
-            ['name'    => 'window_cleaning',],
+            ['name'    => 'sealing', 'title' => 'Герметизация межпанельных швов',],
+            ['name'    => 'window_cleaning', 'title' => 'Мойка окон',],
         ];
 
         // Simple Queries

@@ -9,6 +9,8 @@ use App\Controllers\Admin\UsersController;
 use App\Controllers\Admin\ImageController;
 use App\Controllers\Admin\CalculatorController;
 use App\Controllers\Admin\SealingpriceController;
+use App\Controllers\IndexController;
+use App\Controllers\CategoryController;
 use App\Controllers\Admin\WindowcleaningpriceController;
 use App\Controllers\Home;
 
@@ -29,7 +31,7 @@ $routes->environment('development', static function ($routes) {
     // $routes->get('from', 'to', ['subdomain' => 'media']); // $routes->get('from', 'to', ['subdomain' => '*']);
 
     $routes->get('builder', 'Tools\Builder::index');
-    
+
     $routes->get('getinfo', static function () { // Эта функция будет выполнена, когда пользователь посетит этот URI. 
         // Это удобно для быстрого выполнения небольших задач или даже простого отображения простого представления:
         echo "<b>!!!<b/><pre>";
@@ -40,7 +42,7 @@ $routes->environment('development', static function ($routes) {
     $routes->view('about/(:segment)/(:segment)', 'pages/about'); // Within the view, you can access the segments with $segments[0] and $segments[1] respectively.
 });
 
-$routes->get('/', [Home::class, 'index']);
+$routes->get('/', [IndexController::class, 'index']);
 // Без 'use App\Controllers\Home;' == 'Config\Home', поскольку Routes.php имеет пространство имен 'Config'
 // маршрутизатор добавит пространства имен по умолчанию 'App\Controllers' в начало контроллера, указанного в маршруте.
 
@@ -55,7 +57,7 @@ service('auth')->routes($routes);
 // Параметры, передаваемые во внешнюю group() (например, пространство имен и фильтр), не объединяются с параметрами внутренней group().
 // 
 // $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'group:admin,superadmin'], static function($routes){
-$routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'group:superadmin'], static function($routes){
+$routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'group:superadmin'], static function ($routes) {
     // 
     // Вы можете настроить, куда будет перенаправляться пользователь при входе в систему, с помощью метода loginRedirect() конфигурационного файла app/Config/Auth.php
     // Например: администраторы на /admin, а все остальные группы на /
@@ -98,7 +100,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
     //         $routes->resource('users');
     //     }
     // );
-    
+
     // Примечание
     // https://codeigniter.com/user_guide/incoming/routing.html#multiple-filters
     // Если вы установили для маршрута более одного фильтра, вам необходимо включить несколько 
@@ -106,12 +108,12 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
     // Важный! 
     // Эта функция отключена по умолчанию. Потому что это нарушает обратную совместимость.
 
-	// $routes->group('users', ['namespace' => 'App\Controllers\Admin', 'filter' => 'permission:admin.access'], function ($routes) {}
-	$routes->group('users', ['namespace' => 'App\Controllers\Admin'], function ($routes) { // admin/users/
-        $routes->get('/', [UsersController::class, 'index']);//, ['as' => 'admin.user.home']
+    // $routes->group('users', ['namespace' => 'App\Controllers\Admin', 'filter' => 'permission:admin.access'], function ($routes) {}
+    $routes->group('users', ['namespace' => 'App\Controllers\Admin'], function ($routes) { // admin/users/
+        $routes->get('/', [UsersController::class, 'index']); //, ['as' => 'admin.user.home']
         // $routes->get('list', 'UsersController::list');
         // $routes->delete('users/delete/(:segment)', 'UsersController::delete', ['filter' => 'admin-auth:dual,noreturn']); // ['dual', 'noreturn'] in $arguments filter’s before() and after()
-	});
+    });
 });
 
 // $routes->resource('products', ['controller' => 'ProductController', 'websafe' => 1]);
@@ -123,7 +125,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'gr
 // PATCH  | products/(.*)          | »   \App\Controllers\Products::update/$1
 // PUT    | products/(.*)          | »   \App\Controllers\Products::update/$1
 // DELETE | products/(.*)          | »   \App\Controllers\Products::delete/$1
-
+    
 $routes->presenter('products', ['controller' => 'ProductController', 'websafe' => 1]);
 // GET    | products               | »   \App\Controllers\ProductController::index    
 // GET    | products/show/(.*)     | »   \App\Controllers\ProductController::show/$1  
@@ -137,6 +139,9 @@ $routes->presenter('products', ['controller' => 'ProductController', 'websafe' =
 // POST   | products               | »   \App\Controllers\ProductController::create
 
 // The route is defined as:
-$routes->get('users/(:num)/gallery/(:num)', 'Galleries::showUserGallery/$1/$2', ['as' => 'user_gallery']); 
+$routes->get('users/(:num)/gallery/(:num)', 'Galleries::showUserGallery/$1/$2', ['as' => 'user_gallery']);
 // <a href="<?= url_to('user_gallery', 15, 12) вопр.>">View Gallery</a> Result: 'http://example.com/users/15/gallery/12'
 
+// Category
+$routes->get('category/sealing', [CategoryController::class, 'sealing'], ['as' => 'category.sealing']);
+$routes->get('category/window_cleaning', [CategoryController::class, 'window_cleaning'], ['as' => 'category.window_cleaning']);
